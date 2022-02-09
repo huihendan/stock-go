@@ -5,7 +5,6 @@ import (
 	hessian "github.com/apache/dubbo-go-hessian2"
 	"os"
 	"os/signal"
-	"stock/painter"
 	"stock/pkg"
 	"stock/stockData"
 	"syscall"
@@ -35,8 +34,7 @@ func main() {
 	config.SetProviderService(new(pkg.UserProvider))
 	config.Load()
 	stockData.Start()
-	painter.KlineExample()
-
+	//painter.KlineExample()
 	initSignal()
 }
 

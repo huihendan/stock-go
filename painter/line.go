@@ -9,11 +9,6 @@ import (
 	. "stock/stockData"
 )
 
-var (
-	itemCntLine = 6
-	//fruits      = []string{"Apple", "Banana", "Peach ", "Lemon", "Pear", "Cherry"}
-)
-
 func LineExample() {
 	page := components.NewPage()
 	line := charts.NewLine()
