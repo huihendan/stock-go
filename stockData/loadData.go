@@ -8,10 +8,10 @@ import (
 	"strings"
 )
 
-var path = "/Users/beven/Data/DataEchart/"
+var path = "./Data/"
 
 func LoadStockList() [][]string {
-	fileName := path + "../stockList.csv"
+	fileName := path + "stockList.csv"
 	fs1, _ := os.Open(fileName)
 	r1 := csv.NewReader(fs1)
 	content, err := r1.ReadAll()

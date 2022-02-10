@@ -175,3 +175,42 @@ func PaintStock(stock *StockInfo) {
 	}
 	page.Render(io.MultiWriter(f))
 }
+
+func PaintStockKline(stock *StockInfo) {
+	page := components.NewPage()
+	kline := charts.NewKLine()
+	y := make([]opts.KlineData, 0)
+	x := make([]string, 0)
+	var tiele string
+	for _, data := range stock.Datas.DayDatas {
+		x = append(x, data.DataStr)
+		y = append(y, opts.KlineData{Value: [4]float32{data.PriceBegin, data.PriceEnd, data.PriceHigh, data.PriceLow}})
+	}
+	kline.SetXAxis(x)
+	kline.AddSeries("Category A", y)
+
+	//支持X,Y轴缩放
+	kline.SetGlobalOptions(
+		charts.WithTitleOpts(opts.Title{
+			Title: tiele,
+		}),
+		charts.WithDataZoomOpts(opts.DataZoom{
+			Type:       "slider",
+			Start:      50,
+			End:        100,
+			XAxisIndex: []int{0},
+		}),
+		charts.WithDataZoomOpts(opts.DataZoom{
+			Type:       "inside",
+			Start:      50,
+			End:        100,
+			XAxisIndex: []int{0},
+		}))
+	page.AddCharts(kline)
+
+	f, err := os.Create(stock.Code + ".html")
+	if err != nil {
+		panic(err)
+	}
+	page.Render(io.MultiWriter(f))
+}

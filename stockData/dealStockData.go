@@ -20,7 +20,7 @@ func (stock *StockInfo) DealPointsLen(len int) {
 	}
 }
 
-func (stock *StockInfo) DealStockDataK() {
+func (stock *StockInfo) DealStockPoints() {
 
 	var dayDataToday *StockDataDay
 	var dayDataYes *StockDataDay

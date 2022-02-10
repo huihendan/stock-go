@@ -46,14 +46,14 @@ func LoadAllData() {
 	}
 	logger.Infof("Stocks size[%d]", len(Stocks))
 }
-func DealStockData_K() {
+func DealStocksPoints() {
 	for _, stock := range Stocks {
-		stock.DealStockDataK()
+		stock.DealStockPoints()
 	}
 	logger.Infof("DealStockData finish")
 }
 
 func Start() {
 	LoadAllData()
-	DealStockData_K()
+	DealStocksPoints()
 }
