@@ -1,6 +1,7 @@
 package painter
 
 import (
+	"github.com/apache/dubbo-go/common/logger"
 	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/components"
 	"github.com/go-echarts/go-echarts/v2/opts"
@@ -206,6 +207,46 @@ func PaintStockKline(stock *StockInfo) {
 			End:        100,
 			XAxisIndex: []int{0},
 		}))
+
+	sectionH := make([]opts.ScatterData, 0)
+	sectionL := make([]opts.ScatterData, 0)
+	j := 0
+	for i := 0; i < len(stock.Datas.Sections); i++ {
+		stockDay := stock.Datas.Sections[i]
+		for ; j < stockDay.Index-1; j++ {
+			sectionH = append(sectionH, opts.ScatterData{})
+			sectionL = append(sectionL, opts.ScatterData{})
+		}
+		if stockDay.PointType == POINT_PEAK {
+			sectionH = append(sectionH, opts.ScatterData{
+				Value:        stockDay.PriceA,
+				Symbol:       "pin",
+				SymbolSize:   30,
+				SymbolRotate: 10,
+			})
+			sectionL = append(sectionL, opts.ScatterData{})
+		} else {
+			sectionL = append(sectionL, opts.ScatterData{
+				Value:        stockDay.PriceA,
+				Symbol:       "pin",
+				SymbolSize:   30,
+				SymbolRotate: 10,
+			})
+			sectionH = append(sectionH, opts.ScatterData{})
+		}
+		j++
+	}
+
+	scatter := charts.NewScatter()
+	scatter.SetGlobalOptions(
+		charts.WithTitleOpts(opts.Title{Title: "basic scatter example"}),
+	)
+	scatter.SetXAxis(x)
+	//SeriesOpts
+	scatter.AddSeries("Point B", sectionH)
+	scatter.AddSeries("Point A", sectionL)
+	kline.Overlap(scatter)
+
 	page.AddCharts(kline)
 
 	f, err := os.Create(stock.Code + ".html")
@@ -213,4 +254,5 @@ func PaintStockKline(stock *StockInfo) {
 		panic(err)
 	}
 	page.Render(io.MultiWriter(f))
+	logger.Infof("finish")
 }

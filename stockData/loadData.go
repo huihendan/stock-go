@@ -54,14 +54,16 @@ func LoadFromCsv(code string) (stockData StockData) {
 
 	priceEndY := 0.0
 	Interest := 1.0
+	i := 0
 	for index, row := range content {
-		stock := new(StockDataDay)
-		stock.Index = index
 		if index != 0 {
 			//丢弃停牌数据
 			if row[4] == "0" {
 				continue
 			}
+			i++
+			stock := new(StockDataDay)
+			stock.Index = i
 			stock.DataStr = row[0]
 			priceBegin, _ := strconv.ParseFloat(row[1], 32)
 			priceEnd, _ := strconv.ParseFloat(row[5], 32)

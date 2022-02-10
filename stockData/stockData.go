@@ -15,6 +15,7 @@ type StockInfo struct {
 type StockData struct {
 	DayDatas []*StockDataDay
 	Points   []*StockDataDay
+	Sections []*StockDataDay
 }
 
 type StockDataDay struct {
@@ -53,7 +54,16 @@ func DealStocksPoints() {
 	logger.Infof("DealStockData finish")
 }
 
+func DealStocksSections() {
+	for _, stock := range Stocks {
+		stock.DealStockSession(0)
+	}
+	logger.Infof("DealStockData finish")
+}
+
 func Start() {
 	LoadAllData()
 	DealStocksPoints()
+	DealStocksSections()
+	logger.Infof("finish")
 }

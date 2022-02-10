@@ -20,6 +20,7 @@ func (stock *StockInfo) DealPointsLen(len int) {
 	}
 }
 
+//列举峰谷点
 func (stock *StockInfo) DealStockPoints() {
 
 	var dayDataToday *StockDataDay
@@ -52,4 +53,37 @@ func (stock *StockInfo) DealStockPoints() {
 		//stock.DealPointsLen(2)
 	}
 
+}
+
+//从峰谷点中获取Section
+func (stock *StockInfo) DealStockSession(index int) {
+	len := len(stock.Datas.Points)
+	dataDayBegin := stock.Datas.Points[index]
+	dataDayH := stock.Datas.Points[index]
+	dataDayL := stock.Datas.Points[index]
+	for ; index < len; index++ {
+		dataDay := stock.Datas.Points[index]
+		if dataDay.PriceA > dataDayH.PriceA {
+			dataDayH = dataDay
+		} else if dataDay.PriceA < dataDayL.PriceA {
+			dataDayL = dataDay
+		}
+		if dataDay.Index-dataDayBegin.Index > 50 {
+			break
+		}
+	}
+
+	if dataDayH.PriceA/dataDayL.PriceA > 1.2 {
+		if dataDayH.Index < dataDayL.Index {
+			stock.Datas.Sections = append(stock.Datas.Sections, dataDayH)
+			stock.Datas.Sections = append(stock.Datas.Sections, dataDayL)
+		} else {
+			stock.Datas.Sections = append(stock.Datas.Sections, dataDayL)
+			stock.Datas.Sections = append(stock.Datas.Sections, dataDayH)
+		}
+	}
+
+	if index < len {
+		stock.DealStockSession(index)
+	}
 }
