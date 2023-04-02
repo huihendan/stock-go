@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>POST Request</title>
+</head>
+<body>
+	<form id="myForm">
+		<label for="param1">参数1:</label><br>
+		<input type="text" id="param1" name="param1"><br>
+		<label for="param2">参数2:</label><br>
+		<input type="text" id="param2" name="param2"><br>
+		<label for="param3">参数3:</label><br>
+		<input type="text" id="param3" name="param3"><br>
+		<label for="param4">参数4:</label><br>
+		<input type="text" id="param4" name="param4"><br><br>
+		<button type="button" onclick="postData()">发送POST请求</button>
+	</form>
+
+<script>
+function postData() {
+  let url = 'http://192.168.1.9:8080/stock';
+  let data = {
+    "Code": document.getElementById("param1").value,
+    "methods": document.getElementById("param2").value,
+    param3: document.getElementById("param3").value,
+    param4: document.getElementById("param4").value
+  };
+
+  fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }).then(res => res.json())
+  .then(response => console.log('Success:', JSON.stringify(response)))
+  .catch(error => console.error('Error:', error));
+}
+</script>
+
+</body>
+</html>

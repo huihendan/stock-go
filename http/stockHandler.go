@@ -2,6 +2,8 @@ package http
 
 import (
 	"encoding/json"
+	"github.com/apache/dubbo-go/common/logger"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"stock/stockData"
@@ -17,9 +19,15 @@ type stockParam struct {
 }
 
 func stock(w http.ResponseWriter, r *http.Request) {
+	bodyBytes, err1 := ioutil.ReadAll(r.Body)
+	if err1 != nil {
+		panic(err1)
+	}
+	logger.Infof("rec %s", string(bodyBytes))
 	var param stockParam
 	err := json.NewDecoder(r.Body).Decode(&param)
 	param.CmdCount = 0
+	logger.Infof("rec param %v", param)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
