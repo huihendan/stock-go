@@ -4,12 +4,27 @@ import (
 	"encoding/csv"
 	"github.com/apache/dubbo-go/common/logger"
 	"os"
+	"runtime"
 	"strconv"
 	"strings"
 )
 
-var path = "./Data/"
+var path = "../Data/"
 
+func init() {
+	sysType := runtime.GOOS
+
+	if sysType == "linux" {
+		path = "../Data/"
+	}
+
+	if sysType == "windows" {
+		path = "D:\\Data\\"
+	}
+	logger.Infof("Data Path: %s", path)
+}
+
+// 加载股票列表
 func LoadStockList() [][]string {
 	fileName := path + "stockList.csv"
 	fs1, _ := os.Open(fileName)
@@ -20,7 +35,11 @@ func LoadStockList() [][]string {
 	}
 
 	for index, row := range content {
-		if index != 0 {
+		//调试阶段，只取30分之一 个数据
+		if index%60 == 0 {
+			//continue
+			//}
+			//if index != 0 {
 			row0 := string(row[0])
 			row1 := string(row[1])
 			row2 := string(row[2])
@@ -33,10 +52,6 @@ func LoadStockList() [][]string {
 			StockList[code] = row2
 		}
 
-		//调试阶段，只取前10个数据
-		if index == 10 {
-			break
-		}
 	}
 
 	logger.Infof("stock2 list size %d", len(content))

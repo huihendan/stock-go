@@ -2,26 +2,24 @@ package main
 
 import (
 	"fmt"
-	hessian "github.com/apache/dubbo-go-hessian2"
 	"os"
 	"os/signal"
+	"stock/http"
 	"stock/painter"
-	"stock/pkg"
 	"stock/stockData"
 	"syscall"
 	"time"
 )
 
 import (
-	_ "github.com/apache/dubbo-go/cluster/cluster_impl"
-	_ "github.com/apache/dubbo-go/cluster/loadbalance"
+	//_ "github.com/apache/dubbo-go/cluster/cluster_impl"
+	//_ "github.com/apache/dubbo-go/cluster/loadbalance"
 	"github.com/apache/dubbo-go/common/logger"
-	_ "github.com/apache/dubbo-go/common/proxy/proxy_factory"
-	"github.com/apache/dubbo-go/config"
-	_ "github.com/apache/dubbo-go/filter/filter_impl"
-	_ "github.com/apache/dubbo-go/protocol/dubbo"
-	_ "github.com/apache/dubbo-go/registry/nacos"
-	_ "github.com/apache/dubbo-go/registry/protocol"
+	//_ "github.com/apache/dubbo-go/common/proxy/proxy_factory"
+	//_ "github.com/apache/dubbo-go/filter/filter_impl"
+	//_ "github.com/apache/dubbo-go/protocol/dubbo"
+	//_ "github.com/apache/dubbo-go/registry/nacos"
+	//_ "github.com/apache/dubbo-go/registry/protocol"
 )
 
 var (
@@ -31,19 +29,23 @@ var (
 // need to setup environment variable "CONF_PROVIDER_FILE_PATH" to "conf/server.yml" before run
 func main() {
 
-	hessian.RegisterPOJO(&pkg.User{})
-	config.SetProviderService(new(pkg.UserProvider))
-	config.Load()
-	stockData.Start()
+	//hessian.RegisterPOJO(&pkg.User{})
+	//config.SetProviderService(new(pkg.UserProvider))
+	//config.Load()
+	go http.StartServer()
 
-	painter.PaintStockKline(stockData.Stocks["sz.000006"])
+	go stockData.Start()
+
+	painter.PaintStockKline("sz.000001")
 	initSignal()
 }
 
 func initSignal() {
 	signals := make(chan os.Signal, 1)
 	// It is not possible to block SIGKILL or syscall.SIGSTOP
-	signal.Notify(signals, os.Interrupt, os.Kill, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
+	//signal.Notify(signals, os.Interrupt, os.Kill, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
+	signal.Notify(signals, syscall.SIGKILL, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
+
 	for {
 		sig := <-signals
 		logger.Infof("get signal %s", sig.String())

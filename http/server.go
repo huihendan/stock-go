@@ -11,7 +11,7 @@ func init() {
 
 }
 
-func startServer() {
+func StartServer() {
 	// 启动HTTP服务器，监听本地8080端口
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

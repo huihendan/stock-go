@@ -6,7 +6,7 @@ import (
 )
 
 func TestHttpServer(t *testing.T) {
-	startServer()
+	StartServer()
 
 	time.After(30 * time.Minute)
 }

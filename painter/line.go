@@ -177,7 +177,11 @@ func PaintStock(stock *StockInfo) {
 	page.Render(io.MultiWriter(f))
 }
 
-func PaintStockKline(stock *StockInfo) {
+func PaintStockKline(code string) {
+	stock := GetstockBycode(code)
+	if stock == nil {
+		logger.Errorf("PaintStockKline: %s failed, stock data not exit!", code)
+	}
 	page := components.NewPage()
 	kline := charts.NewKLine()
 	y := make([]opts.KlineData, 0)
@@ -190,6 +194,17 @@ func PaintStockKline(stock *StockInfo) {
 	kline.SetXAxis(x)
 	kline.AddSeries("Category A", y)
 
+	//var pointtype []string
+	//pointtype = append(pointtype, "circle")
+	//
+	//kline.SetSeriesOptions(
+	//	charts.WithLineChartOpts(opts.LineChart{Smooth: true}),
+	//	charts.WithMarkPointStyleOpts(opts.MarkPointStyle{
+	//		Symbol:     pointtype,
+	//		SymbolSize: 10,
+	//	}),
+	//)
+
 	//支持X,Y轴缩放
 	kline.SetGlobalOptions(
 		charts.WithTitleOpts(opts.Title{
@@ -201,6 +216,7 @@ func PaintStockKline(stock *StockInfo) {
 			End:        100,
 			XAxisIndex: []int{0},
 		}),
+
 		charts.WithDataZoomOpts(opts.DataZoom{
 			Type:       "inside",
 			Start:      50,
@@ -220,16 +236,16 @@ func PaintStockKline(stock *StockInfo) {
 		if stockDay.PointType == POINT_PEAK {
 			sectionH = append(sectionH, opts.ScatterData{
 				Value:        stockDay.PriceA,
-				Symbol:       "pin",
-				SymbolSize:   30,
+				Symbol:       "circle",
+				SymbolSize:   10,
 				SymbolRotate: 10,
 			})
 			sectionL = append(sectionL, opts.ScatterData{})
 		} else {
 			sectionL = append(sectionL, opts.ScatterData{
 				Value:        stockDay.PriceA,
-				Symbol:       "pin",
-				SymbolSize:   30,
+				Symbol:       "circle",
+				SymbolSize:   10,
 				SymbolRotate: 10,
 			})
 			sectionH = append(sectionH, opts.ScatterData{})
@@ -249,7 +265,7 @@ func PaintStockKline(stock *StockInfo) {
 
 	page.AddCharts(kline)
 
-	f, err := os.Create(stock.Code + ".html")
+	f, err := os.Create(stock.Code + "6.html")
 	if err != nil {
 		panic(err)
 	}
