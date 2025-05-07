@@ -23,7 +23,8 @@ if __name__ == '__main__':
 
     for row in csv_reader:
             print(row[0])
-            rs = bs.query_history_k_data(row[0].split(".")[1]+ "." + row[0].split(".")[0],"date,open,peTTM,pbMRQ,tradestatus,close,high,low",start_date='2014-01-01', end_date=datestr,frequency="d", adjustflag="3")
+            #rs = bs.query_history_k_data(row[0].split(".")[1]+ "." + row[0].split(".")[0],"date,open,peTTM,pbMRQ,tradestatus,close,high,low",start_date='2014-01-01', end_date=datestr,frequency="d", adjustflag="3")
+            rs = bs.query_history_k_data_plus(row[0].split(".")[1]+ "." + row[0].split(".")[0],"date,open,peTTM,pbMRQ,tradestatus,close,high,low",start_date='2014-01-01', end_date=datestr,frequency="d", adjustflag="3")
             data_list = []
             while (rs.error_code == '0') & rs.next():
                 data_list.append(rs.get_row_data())

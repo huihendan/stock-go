@@ -15,7 +15,7 @@ import socket
 import baostock as bs
 import pandas as pd
 
-CAPT_PATH = '/Users/beven/Data/DataEchart/'
+CAPT_PATH = '../Data/'
 Windows = False
 if Windows:
     CAPT_PATH = 'D:\\Data_T/'
@@ -67,7 +67,7 @@ def test():
             tomorrow = lastDay + datetime.timedelta(days=1)
             startDay = tomorrow.strftime("%Y-%m-%d")
             stock = file.split("_")[0]
-            rs = bs.query_history_k_data(stock,"date,open,peTTM,pbMRQ,tradestatus,close,high,low",start_date = startDay, end_date=datestr,frequency="d", adjustflag="3")
+            rs = bs.query_history_k_data_plus(stock,"date,open,peTTM,pbMRQ,tradestatus,close,high,low",start_date = startDay, end_date=datestr,frequency="d", adjustflag="3")
             data_list = []
             while (rs.error_code == '0') & rs.next():
                     data_list.append(rs.get_row_data())
