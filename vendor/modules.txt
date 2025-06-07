@@ -1,0 +1,272 @@
+# git.sr.ht/~sbinet/gg v0.5.0
+## explicit; go 1.19
+git.sr.ht/~sbinet/gg
+# github.com/Arafatk/glot v0.0.0-20230425001707-a00521b72ee4
+## explicit
+github.com/Arafatk/glot
+# github.com/RoaringBitmap/roaring v0.6.1
+## explicit; go 1.14
+github.com/RoaringBitmap/roaring
+github.com/RoaringBitmap/roaring/internal
+# github.com/Workiva/go-datastructures v1.0.52
+## explicit
+github.com/Workiva/go-datastructures/common
+# github.com/ajstarks/svgo v0.0.0-20211024235047-1546f124cd8b
+## explicit; go 1.15
+github.com/ajstarks/svgo
+# github.com/apache/dubbo-getty v1.4.7
+## explicit; go 1.14
+github.com/apache/dubbo-getty
+# github.com/apache/dubbo-go v1.5.9
+## explicit; go 1.15
+github.com/apache/dubbo-go/cluster
+github.com/apache/dubbo-go/cluster/directory
+github.com/apache/dubbo-go/cluster/router
+github.com/apache/dubbo-go/cluster/router/chain
+github.com/apache/dubbo-go/cluster/router/utils
+github.com/apache/dubbo-go/common
+github.com/apache/dubbo-go/common/config
+github.com/apache/dubbo-go/common/constant
+github.com/apache/dubbo-go/common/extension
+github.com/apache/dubbo-go/common/logger
+github.com/apache/dubbo-go/common/observer
+github.com/apache/dubbo-go/common/observer/dispatcher
+github.com/apache/dubbo-go/common/proxy
+github.com/apache/dubbo-go/common/yaml
+github.com/apache/dubbo-go/config
+github.com/apache/dubbo-go/config/instance
+github.com/apache/dubbo-go/config/interfaces
+github.com/apache/dubbo-go/config_center
+github.com/apache/dubbo-go/config_center/parser
+github.com/apache/dubbo-go/filter
+github.com/apache/dubbo-go/metadata/identifier
+github.com/apache/dubbo-go/metadata/mapping
+github.com/apache/dubbo-go/metadata/report
+github.com/apache/dubbo-go/metadata/report/factory
+github.com/apache/dubbo-go/metadata/service
+github.com/apache/dubbo-go/metrics
+github.com/apache/dubbo-go/protocol
+github.com/apache/dubbo-go/protocol/invocation
+github.com/apache/dubbo-go/protocol/protocolwrapper
+github.com/apache/dubbo-go/protocol/rest/client
+github.com/apache/dubbo-go/protocol/rest/config
+github.com/apache/dubbo-go/protocol/rest/server
+github.com/apache/dubbo-go/registry
+github.com/apache/dubbo-go/registry/servicediscovery/instance
+github.com/apache/dubbo-go/remoting
+# github.com/apache/dubbo-go-hessian2 v1.9.4
+## explicit
+github.com/apache/dubbo-go-hessian2
+github.com/apache/dubbo-go-hessian2/java8_time
+github.com/apache/dubbo-go-hessian2/java_exception
+github.com/apache/dubbo-go-hessian2/java_sql_time
+github.com/apache/dubbo-go-hessian2/java_util
+# github.com/campoy/embedmd v1.0.0
+## explicit
+github.com/campoy/embedmd
+github.com/campoy/embedmd/embedmd
+# github.com/creasty/defaults v1.5.1
+## explicit; go 1.13
+github.com/creasty/defaults
+# github.com/davecgh/go-spew v1.1.1
+## explicit
+github.com/davecgh/go-spew/spew
+# github.com/dubbogo/gost v1.13.2
+## explicit; go 1.16
+github.com/dubbogo/gost/bytes
+github.com/dubbogo/gost/container/chan
+github.com/dubbogo/gost/container/queue
+github.com/dubbogo/gost/container/set
+github.com/dubbogo/gost/context
+github.com/dubbogo/gost/hash/page
+github.com/dubbogo/gost/log
+github.com/dubbogo/gost/math/big
+github.com/dubbogo/gost/net
+github.com/dubbogo/gost/path/filepath
+github.com/dubbogo/gost/runtime
+github.com/dubbogo/gost/sort
+github.com/dubbogo/gost/strings
+github.com/dubbogo/gost/sync
+github.com/dubbogo/gost/time
+# github.com/dustin/go-humanize v1.0.1
+## explicit; go 1.16
+github.com/dustin/go-humanize
+# github.com/go-echarts/go-echarts/v2 v2.2.4
+## explicit; go 1.15
+github.com/go-echarts/go-echarts/v2/charts
+github.com/go-echarts/go-echarts/v2/components
+github.com/go-echarts/go-echarts/v2/datasets
+github.com/go-echarts/go-echarts/v2/opts
+github.com/go-echarts/go-echarts/v2/render
+github.com/go-echarts/go-echarts/v2/templates
+github.com/go-echarts/go-echarts/v2/types
+# github.com/go-fonts/liberation v0.3.1
+## explicit; go 1.19
+github.com/go-fonts/liberation/liberationmonobold
+github.com/go-fonts/liberation/liberationmonobolditalic
+github.com/go-fonts/liberation/liberationmonoitalic
+github.com/go-fonts/liberation/liberationmonoregular
+github.com/go-fonts/liberation/liberationsansbold
+github.com/go-fonts/liberation/liberationsansbolditalic
+github.com/go-fonts/liberation/liberationsansitalic
+github.com/go-fonts/liberation/liberationsansregular
+github.com/go-fonts/liberation/liberationserifbold
+github.com/go-fonts/liberation/liberationserifbolditalic
+github.com/go-fonts/liberation/liberationserifitalic
+github.com/go-fonts/liberation/liberationserifregular
+# github.com/go-latex/latex v0.0.0-20230307184459-12ec69307ad9
+## explicit; go 1.19
+github.com/go-latex/latex
+github.com/go-latex/latex/ast
+github.com/go-latex/latex/drawtex
+github.com/go-latex/latex/font
+github.com/go-latex/latex/font/ttf
+github.com/go-latex/latex/internal/tex2unicode
+github.com/go-latex/latex/mtex
+github.com/go-latex/latex/mtex/symbols
+github.com/go-latex/latex/tex
+github.com/go-latex/latex/token
+# github.com/go-ole/go-ole v1.2.6
+## explicit; go 1.12
+github.com/go-ole/go-ole
+github.com/go-ole/go-ole/oleutil
+# github.com/go-pdf/fpdf v0.8.0
+## explicit; go 1.19
+github.com/go-pdf/fpdf
+# github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
+## explicit
+github.com/golang/freetype/raster
+github.com/golang/freetype/truetype
+# github.com/golang/snappy v0.0.4
+## explicit
+github.com/golang/snappy
+# github.com/gorilla/websocket v1.4.2
+## explicit; go 1.12
+github.com/gorilla/websocket
+# github.com/jinzhu/copier v0.0.0-20190625015134-976e0346caa8
+## explicit
+github.com/jinzhu/copier
+# github.com/k0kubun/pp v3.0.1+incompatible
+## explicit
+github.com/k0kubun/pp
+# github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0
+## explicit; go 1.16
+github.com/lufia/plan9stats
+# github.com/magiconair/properties v1.8.4
+## explicit; go 1.13
+github.com/magiconair/properties
+# github.com/mattn/go-colorable v0.1.7
+## explicit; go 1.13
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.14
+## explicit; go 1.12
+github.com/mattn/go-isatty
+# github.com/mschoch/smat v0.0.0-20160514031455-90eadee771ae
+## explicit
+github.com/mschoch/smat
+# github.com/pkg/errors v0.9.1
+## explicit
+github.com/pkg/errors
+# github.com/pmezard/go-difflib v1.0.0
+## explicit
+github.com/pmezard/go-difflib/difflib
+# github.com/power-devops/perfstat v0.0.0-20210106213030-5aafc221ea8c
+## explicit; go 1.14
+github.com/power-devops/perfstat
+# github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b
+## explicit
+github.com/satori/go.uuid
+# github.com/sbinet/go-gnuplot v0.0.0-20130514120836-9167d8eb1ac4
+## explicit
+github.com/sbinet/go-gnuplot
+# github.com/shirou/gopsutil/v3 v3.22.2
+## explicit; go 1.15
+github.com/shirou/gopsutil/v3/cpu
+github.com/shirou/gopsutil/v3/internal/common
+github.com/shirou/gopsutil/v3/mem
+github.com/shirou/gopsutil/v3/net
+github.com/shirou/gopsutil/v3/process
+# github.com/tklauser/go-sysconf v0.3.10
+## explicit; go 1.13
+github.com/tklauser/go-sysconf
+# github.com/tklauser/numcpus v0.4.0
+## explicit; go 1.11
+github.com/tklauser/numcpus
+# github.com/vicanso/go-charts/v2 v2.6.10
+## explicit; go 1.17
+github.com/vicanso/go-charts/v2
+# github.com/wcharczuk/go-chart/v2 v2.1.0
+## explicit; go 1.15
+github.com/wcharczuk/go-chart/v2
+github.com/wcharczuk/go-chart/v2/drawing
+github.com/wcharczuk/go-chart/v2/matrix
+github.com/wcharczuk/go-chart/v2/roboto
+# github.com/willf/bitset v1.1.10
+## explicit
+github.com/willf/bitset
+# github.com/yusufpapurcu/wmi v1.2.2
+## explicit; go 1.16
+github.com/yusufpapurcu/wmi
+# go.uber.org/atomic v1.9.0
+## explicit; go 1.13
+go.uber.org/atomic
+# go.uber.org/multierr v1.6.0
+## explicit; go 1.12
+go.uber.org/multierr
+# go.uber.org/zap v1.21.0
+## explicit; go 1.13
+go.uber.org/zap
+go.uber.org/zap/buffer
+go.uber.org/zap/internal/bufferpool
+go.uber.org/zap/internal/color
+go.uber.org/zap/internal/exit
+go.uber.org/zap/zapcore
+# golang.org/x/image v0.11.0
+## explicit; go 1.12
+golang.org/x/image/ccitt
+golang.org/x/image/draw
+golang.org/x/image/font
+golang.org/x/image/font/basicfont
+golang.org/x/image/font/gofont/gobold
+golang.org/x/image/font/gofont/gobolditalic
+golang.org/x/image/font/gofont/goitalic
+golang.org/x/image/font/gofont/goregular
+golang.org/x/image/font/opentype
+golang.org/x/image/font/sfnt
+golang.org/x/image/math/f64
+golang.org/x/image/math/fixed
+golang.org/x/image/tiff
+golang.org/x/image/tiff/lzw
+golang.org/x/image/vector
+# golang.org/x/sys v0.11.0
+## explicit; go 1.17
+golang.org/x/sys/internal/unsafeheader
+golang.org/x/sys/unix
+golang.org/x/sys/windows
+# golang.org/x/text v0.12.0
+## explicit; go 1.17
+golang.org/x/text/encoding
+golang.org/x/text/encoding/charmap
+golang.org/x/text/encoding/internal
+golang.org/x/text/encoding/internal/identifier
+golang.org/x/text/transform
+# gonum.org/v1/plot v0.14.0
+## explicit; go 1.20
+gonum.org/v1/plot
+gonum.org/v1/plot/font
+gonum.org/v1/plot/font/liberation
+gonum.org/v1/plot/palette
+gonum.org/v1/plot/plotter
+gonum.org/v1/plot/plotutil
+gonum.org/v1/plot/text
+gonum.org/v1/plot/tools/bezier
+gonum.org/v1/plot/vg
+gonum.org/v1/plot/vg/draw
+gonum.org/v1/plot/vg/vgeps
+gonum.org/v1/plot/vg/vgimg
+gonum.org/v1/plot/vg/vgpdf
+gonum.org/v1/plot/vg/vgsvg
+gonum.org/v1/plot/vg/vgtex
+# gopkg.in/yaml.v2 v2.4.0
+## explicit; go 1.15
+gopkg.in/yaml.v2
