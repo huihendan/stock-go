@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"log/slog"
 	"os"
 	"os/signal"
 	"stock/http"
@@ -11,27 +13,29 @@ import (
 	"time"
 )
 
-import (
-	//_ "github.com/apache/dubbo-go/cluster/cluster_impl"
-	//_ "github.com/apache/dubbo-go/cluster/loadbalance"
-	"github.com/apache/dubbo-go/common/logger"
-	//_ "github.com/apache/dubbo-go/common/proxy/proxy_factory"
-	//_ "github.com/apache/dubbo-go/filter/filter_impl"
-	//_ "github.com/apache/dubbo-go/protocol/dubbo"
-	//_ "github.com/apache/dubbo-go/registry/nacos"
-	//_ "github.com/apache/dubbo-go/registry/protocol"
-)
-
 var (
 	survivalTimeout = int(3e9)
 )
 
+func init() {
+	logFile, err := os.OpenFile("stock.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		fmt.Printf("无法打开日志文件: %v\n", err)
+		return
+	}
+
+	// 创建一个多输出写入器，同时写入文件和标准输出
+	multiWriter := io.MultiWriter(logFile, os.Stdout)
+
+	// 创建一个文本处理器，将日志输出到多输出写入器
+	handler := slog.NewTextHandler(multiWriter, nil)
+
+	// 设置默认的日志记录器
+	slog.SetDefault(slog.New(handler))
+}
+
 // need to setup environment variable "CONF_PROVIDER_FILE_PATH" to "conf/server.yml" before run
 func main() {
-
-	//hessian.RegisterPOJO(&pkg.User{})
-	//config.SetProviderService(new(pkg.UserProvider))
-	//config.Load()
 	go http.StartServer()
 
 	go stockData.Start()
@@ -42,19 +46,17 @@ func main() {
 
 func initSignal() {
 	signals := make(chan os.Signal, 1)
-	// It is not possible to block SIGKILL or syscall.SIGSTOP
-	//signal.Notify(signals, os.Interrupt, os.Kill, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
 	signal.Notify(signals, syscall.SIGKILL, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
 
 	for {
 		sig := <-signals
-		logger.Infof("get signal %s", sig.String())
+		slog.Info("get signal", "signal", sig.String())
 		switch sig {
 		case syscall.SIGHUP:
 			// reload()
 		default:
 			time.AfterFunc(time.Duration(survivalTimeout), func() {
-				logger.Warnf("app exit now by force...")
+				slog.Warn("app exit now by force...")
 				os.Exit(1)
 			})
 

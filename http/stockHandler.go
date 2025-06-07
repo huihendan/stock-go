@@ -2,9 +2,9 @@ package http
 
 import (
 	"encoding/json"
-	"github.com/apache/dubbo-go/common/logger"
 	"io/ioutil"
 	"log"
+	"log/slog"
 	"net/http"
 	"stock/stockData"
 )
@@ -23,13 +23,13 @@ func stock(w http.ResponseWriter, r *http.Request) {
 	if err1 != nil {
 		panic(err1)
 	}
-	logger.Infof("rec %s", string(bodyBytes))
+	slog.Info("received request", "body", string(bodyBytes))
 	var param stockParam
 	//err := json.NewDecoder(bodyBytes).Decode(&param)
 	err := json.Unmarshal([]byte(bodyBytes), &param)
 
 	param.CmdCount = 0
-	logger.Infof("rec param %v", param)
+	slog.Info("received param", "param", param)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

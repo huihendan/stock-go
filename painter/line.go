@@ -1,13 +1,14 @@
 package painter
 
 import (
-	"github.com/apache/dubbo-go/common/logger"
+	"io"
+	"log/slog"
+	"os"
+	. "stock/stockData"
+
 	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/components"
 	"github.com/go-echarts/go-echarts/v2/opts"
-	"io"
-	"os"
-	. "stock/stockData"
 )
 
 func LineExample() {
@@ -180,7 +181,7 @@ func PaintStock(stock *StockInfo) {
 func PaintStockKline(code string) {
 	stock := GetstockBycode(code)
 	if stock == nil {
-		logger.Errorf("PaintStockKline: %s failed, stock data not exit!", code)
+		slog.Error("PaintStockKline failed, stock data not exist", "code", code)
 	}
 	page := components.NewPage()
 	kline := charts.NewKLine()
@@ -270,5 +271,5 @@ func PaintStockKline(code string) {
 		panic(err)
 	}
 	page.Render(io.MultiWriter(f))
-	logger.Infof("finish")
+	slog.Info("PaintStockKline finished")
 }

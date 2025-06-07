@@ -2,14 +2,16 @@ package chart
 
 import (
 	"fmt"
-	"github.com/wcharczuk/go-chart/v2"
 	"stock/stockData"
 	"stock/utils"
 
-	"github.com/wcharczuk/go-chart/v2/drawing"
+	"github.com/wcharczuk/go-chart/v2"
+
 	"os"
 	"testing"
 	"time"
+
+	"github.com/wcharczuk/go-chart/v2/drawing"
 )
 
 func Test_line(t *testing.T) {
@@ -119,9 +121,9 @@ func Test_paint(t *testing.T) {
 	defer f2.Close()
 	graph.Render(chart.SVG, f2)
 
-	f3, _ := os.Create("output.jpg")
-	defer f3.Close()
-	graph.Render(chart.Jet, f3)
+	// f3, _ := os.Create("output.jpg")
+	// defer f3.Close()
+	// graph.Render(chart.Jet, f3)
 }
 
 func xvalues() []time.Time {

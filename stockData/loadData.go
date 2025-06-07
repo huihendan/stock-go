@@ -2,7 +2,7 @@ package stockData
 
 import (
 	"encoding/csv"
-	"github.com/apache/dubbo-go/common/logger"
+	"log/slog"
 	"os"
 	"runtime"
 	"strconv"
@@ -21,7 +21,7 @@ func init() {
 	if sysType == "windows" {
 		path = "D:\\Data\\"
 	}
-	logger.Infof("Data Path: %s", path)
+	slog.Info("Data Path", "path", path)
 }
 
 // 加载股票列表
@@ -31,7 +31,7 @@ func LoadStockList() [][]string {
 	r1 := csv.NewReader(fs1)
 	content, err := r1.ReadAll()
 	if err != nil {
-		logger.Errorf("can not readall, err is %+v", err)
+		slog.Error("can not readall", "err", err)
 	}
 
 	for index, row := range content {
@@ -54,7 +54,7 @@ func LoadStockList() [][]string {
 
 	}
 
-	logger.Infof("stock2 list size %d", len(content))
+	slog.Info("stock list size", "size", len(content))
 	return content
 }
 
@@ -64,7 +64,7 @@ func LoadFromCsv(code string) (stockData StockData) {
 	r1 := csv.NewReader(fs1)
 	content, err := r1.ReadAll()
 	if err != nil {
-		logger.Errorf("can not readall, err is %+v", err)
+		slog.Error("can not readall", "err", err)
 	}
 
 	priceEndY := 0.0

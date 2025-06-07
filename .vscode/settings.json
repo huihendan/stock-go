@@ -2,10 +2,8 @@
     "go.goroot": "/usr/local/go/bin/go", 
     "go.toolsManagement.autoUpdate": false,
 
-    
-    "go.toolsEnvVars": {
-        "PATH": "/usr/local/go/bin:${env:PATH}"  // 强制 PATH 顺序
-    },
-    "go.useLanguageServer": false  // 临时禁用语言服务
-      
+    "go.useLanguageServer": true,
+    "gopls": {
+    "ui.semanticTokens": true  // 增强代码高亮
+    }      
 }

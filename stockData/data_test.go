@@ -2,7 +2,7 @@ package stockData
 
 import (
 	"fmt"
-	"github.com/apache/dubbo-go/common/logger"
+	"log/slog"
 	"testing"
 )
 
@@ -18,5 +18,5 @@ func TestLoadStockList(t *testing.T) {
 	//stockList := LoadStockList()
 	LoadStockList()
 
-	logger.Infof("stock list size[%d]", len(StockList))
+	slog.Info("stock list size", "size", len(StockList))
 }

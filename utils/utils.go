@@ -1,12 +1,12 @@
 package utils
 
 import (
-	"github.com/apache/dubbo-go/common/logger"
+	"log/slog"
 	"time"
 )
 
 func CostTime(start time.Time) {
 	elapsed := time.Since(start)
 	//fmt.Println("cost:%v",elapsed)
-	logger.Infof("cost:%v", elapsed)
+	slog.Info("cost time", "elapsed", elapsed)
 }

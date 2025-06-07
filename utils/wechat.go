@@ -2,8 +2,8 @@ package utils
 
 import (
 	"encoding/json"
-	"github.com/apache/dubbo-go/common/logger"
 	"io/ioutil"
+	"log/slog"
 	"net/http"
 	"strings"
 	"time"
@@ -65,7 +65,7 @@ func GetToken() (tokenRes string) {
 	// 释放对象
 	defer client.CloseIdleConnections()
 
-	logger.Infof("rec rsp[%s] token[%s]", body, myInfo.Access_token)
+	slog.Info("received response", "response", string(body), "token", myInfo.Access_token)
 	return myInfo.Access_token
 }
 
@@ -100,7 +100,7 @@ func SendWeChatMessage(message string) {
 	if err2 != nil {
 		return
 	}
-	logger.Infof("rec rsp[%s]", body)
+	slog.Info("received response", "response", string(body))
 	// 释放对象
 	defer client.CloseIdleConnections()
 	return
