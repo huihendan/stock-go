@@ -1,7 +1,7 @@
 package stockData
 
 import (
-	"log/slog"
+	"stock/logger"
 	"stock/utils"
 	"time"
 )
@@ -54,7 +54,7 @@ func LoadDataOneByOne() {
 		DealStocksPointsByCode(code)
 		DealStocksSectionsByCode(code)
 	}
-	slog.Info("Stocks loaded", "size", len(Stocks))
+	logger.Infof("Stocks loaded size=%d", len(Stocks))
 }
 
 func LoadDataOneByCode(code string) (stock *StockInfo) {
@@ -67,7 +67,7 @@ func LoadDataOneByCode(code string) (stock *StockInfo) {
 	Stocks[code] = stock
 	DealStocksPointsByCode(code)
 	DealStocksSectionsByCode(code)
-	slog.Info("Stocks loaded", "size", len(Stocks))
+	logger.Infof("Stocks loaded size=%d", len(Stocks))
 	return stock
 }
 
@@ -82,7 +82,7 @@ func LoadAllData() {
 		stockInfo.Name = name
 		Stocks[code] = stockInfo
 	}
-	slog.Info("Stocks loaded", "size", len(Stocks))
+	logger.Infof("Stocks loaded size=%d", len(Stocks))
 }
 
 func LoadDataByCode(code string) {
@@ -98,39 +98,40 @@ func LoadDataByCode(code string) {
 		Stocks[code] = stockInfo
 	}
 
-	slog.Info("Stocks loaded", "size", len(Stocks))
+	logger.Infof("Stocks loaded size=%d", len(Stocks))
 }
 
 func DealStocksPointsByCode(code string) {
 	stockInfo, ok := Stocks[code]
 	if !ok {
-		slog.Error("DealStocksPointsByCode failed", "code", code)
+		logger.Errorf("DealStocksPointsByCode failed code=%s", code)
 	}
 	stockInfo.DealStockPoints()
-	slog.Info("DealStocksPointsByCode finished", "code", code)
+	logger.Infof("DealStocksPointsByCode finished code=%s", code)
 }
 
 func DealAllStocksPoints() {
 	for _, stock := range Stocks {
 		stock.DealStockPoints()
 	}
-	slog.Info("DealStockData finished")
+	logger.Info("DealStockData finished")
 }
 
 func DealStocksSectionsByCode(code string) {
 	stockInfo, ok := Stocks[code]
 	if !ok {
-		slog.Error("DealStocksSectionsByCode failed", "code", code)
+		logger.Errorf("DealStocksSectionsByCode failed code=%s", code)
 	}
 
 	stockInfo.DealStockSession(0)
-	slog.Info("DealStocksSectionsByCode finished", "code", code)
+	logger.Infof("DealStocksSectionsByCode finished code=%s", code)
 }
+
 func DealAllStocksSections() {
 	for _, stock := range Stocks {
 		stock.DealStockSession(0)
 	}
-	slog.Info("DealStockData finished")
+	logger.Info("DealStockData finished")
 }
 
 func Start() {
@@ -141,5 +142,5 @@ func Start() {
 	//LoadAllData()
 	//DealAllStocksPoints()
 	//DealAllStocksSections()
-	slog.Info("Stock data loading started")
+	logger.Info("Stock data loading started")
 }

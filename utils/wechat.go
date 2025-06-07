@@ -5,9 +5,15 @@ import (
 	"io/ioutil"
 	"log/slog"
 	"net/http"
+	"stock/logger"
 	"strings"
 	"time"
 )
+
+func init() {
+	// 确保日志系统已初始化
+	logger.Init()
+}
 
 type TokenInfo struct {
 	Access_token string `json:"access_token"`
@@ -84,10 +90,9 @@ func SendWeChatMessage(message string) {
 	var resp *http.Response
 	// 设置了10秒钟的超时
 	client = http.Client{Timeout: 10 * time.Second}
-	var err error
 	url := "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + GetToken()
 	// 这里使用了 Get 方法，并判断异常
-	resp, _ = client.Post(url,
+	resp, err := client.Post(url,
 		"application/json",
 		strings.NewReader(string(send)))
 	if err != nil {
