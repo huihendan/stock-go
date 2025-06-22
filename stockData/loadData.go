@@ -4,39 +4,40 @@ import (
 	"encoding/csv"
 	"log/slog"
 	"os"
-	"runtime"
+	"stock/globalConfig"
+	"stock/logger"
 	"strconv"
 	"strings"
 )
 
-var path = "../Data/"
+// var path = "../Data/"
 
-func init() {
-	sysType := runtime.GOOS
+// func init() {
+// 	sysType := runtime.GOOS
 
-	if sysType == "linux" {
-		path = "../Data/"
-	}
+// 	if sysType == "linux" {
+// 		path = "../Data/"
+// 	}
 
-	if sysType == "windows" {
-		path = "D:\\Data\\"
-	}
-	slog.Info("Data Path", "path", path)
-}
+// 	if sysType == "windows" {
+// 		path = "D:\\Data\\"
+// 	}
+// 	slog.Info("Data Path", "path", path)
+// }
 
 // 加载股票列表
 func LoadStockList() [][]string {
-	fileName := path + "stockList.csv"
+	fileName := globalConfig.DATA_PATH + "stockList.csv"
 	fs1, _ := os.Open(fileName)
 	r1 := csv.NewReader(fs1)
 	content, err := r1.ReadAll()
 	if err != nil {
-		slog.Error("can not readall", "err", err)
+		logger.Error("can not readall", "err", err)
 	}
 
 	for index, row := range content {
 		//调试阶段，只取30分之一 个数据
-		if index%60 == 0 {
+		if index%globalConfig.STOCK_DATA_LOAD_PCT == globalConfig.STOCK_DATA_LOAD_MOD {
 			//continue
 			//}
 			//if index != 0 {
@@ -59,12 +60,12 @@ func LoadStockList() [][]string {
 }
 
 func LoadFromCsv(code string) (stockData StockData) {
-	fileName := path + code + "_ALL.csv"
+	fileName := globalConfig.DATA_PATH + code + "_ALL.csv"
 	fs1, _ := os.Open(fileName)
 	r1 := csv.NewReader(fs1)
 	content, err := r1.ReadAll()
 	if err != nil {
-		slog.Error("can not readall", "err", err)
+		logger.Error("can not readall", "err", err)
 	}
 
 	priceEndY := 0.0

@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"stock/globalConfig"
 	"strconv"
 	"strings"
 	"sync"
@@ -45,6 +46,13 @@ func NewCustomTextHandler(w io.Writer, opts *slog.HandlerOptions) *CustomTextHan
 	go h.processLogs()
 
 	return h
+}
+
+// 后台处理日志的协程
+func (h *CustomTextHandler) processLogsSync(logMsg string) {
+	h.mu.Lock()
+	_, _ = h.w.Write([]byte(logMsg))
+	h.mu.Unlock()
 }
 
 // 后台处理日志的协程
@@ -175,17 +183,19 @@ func (h *CustomTextHandler) Handle(ctx context.Context, r slog.Record) error {
 	// 添加换行符
 	sb.WriteString("\n")
 
-	// 将日志发送到通道
-	select {
-	case h.logChan <- sb.String():
-		// 成功发送到通道
-	default:
-		// 通道已满，直接写入（避免阻塞）
-		h.mu.Lock()
-		_, err := h.w.Write([]byte(sb.String()))
-		h.mu.Unlock()
-		return err
-	}
+	h.processLogsSync(sb.String())
+
+	// // 将日志发送到通道
+	// select {
+	// case h.logChan <- sb.String():
+	// 	// 成功发送到通道
+	// default:
+	// 	// 通道已满，直接写入（避免阻塞）
+	// 	h.mu.Lock()
+	// 	_, err := h.w.Write([]byte(sb.String()))
+	// 	h.mu.Unlock()
+	// 	return err
+	// }
 
 	return nil
 }
@@ -246,7 +256,7 @@ func NewLineHandler(h slog.Handler) *LineHandler {
 // Init 初始化日志系统，确保只初始化一次
 func Init() {
 	once.Do(func() {
-		logFile, err := os.OpenFile("stock.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		logFile, err := os.OpenFile(globalConfig.LOG_PATH+"stock.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
 			fmt.Printf("无法打开日志文件: %v\n", err)
 			return

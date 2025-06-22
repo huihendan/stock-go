@@ -1,5 +1,7 @@
 package stockData
 
+import "sort"
+
 func (stock *StockInfo) DealPointsLen(len int) {
 	var stockLast *StockDataDay
 	var stockNow *StockDataDay
@@ -20,7 +22,7 @@ func (stock *StockInfo) DealPointsLen(len int) {
 	}
 }
 
-//列举峰谷点
+// 列举峰谷点
 func (stock *StockInfo) DealStockPoints() {
 
 	var dayDataToday *StockDataDay
@@ -49,13 +51,28 @@ func (stock *StockInfo) DealStockPoints() {
 			stock.Datas.Points = append(stock.Datas.Points, dayDataYes)
 		}
 
+		if dayDataYes.PointType == POINT_PEAK {
+			stock.Datas.HighPoints = append(stock.Datas.HighPoints, dayDataYes)
+		} else {
+			stock.Datas.LowPoints = append(stock.Datas.LowPoints, dayDataYes)
+		}
 		//TODO 过滤峰谷点波动
 		//stock.DealPointsLen(2)
 	}
 
+	// 对HighPoints按照价格从高到低排序
+	sort.Slice(stock.Datas.HighPoints, func(i, j int) bool {
+		return stock.Datas.HighPoints[i].PriceA > stock.Datas.HighPoints[j].PriceA
+	})
+
+	// 对LowPoints按照价格从低到高排序
+	sort.Slice(stock.Datas.LowPoints, func(i, j int) bool {
+		return stock.Datas.LowPoints[i].PriceA < stock.Datas.LowPoints[j].PriceA
+	})
+
 }
 
-//从峰谷点中获取Section
+// 从峰谷点中获取Section
 func (stock *StockInfo) DealStockSession(index int) {
 	len := len(stock.Datas.Points)
 	dataDayBegin := stock.Datas.Points[index]

@@ -4,6 +4,7 @@ import (
 	"io"
 	"log/slog"
 	"os"
+	"stock/globalConfig"
 	. "stock/stockData"
 
 	"github.com/go-echarts/go-echarts/v2/charts"
@@ -266,7 +267,7 @@ func PaintStockKline(code string) {
 
 	page.AddCharts(kline)
 
-	f, err := os.Create(stock.Code + "6.html")
+	f, err := os.Create(globalConfig.LOG_PATH + stock.Code + ".html")
 	if err != nil {
 		panic(err)
 	}

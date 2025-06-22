@@ -1,10 +1,14 @@
 {
-    "go.goroot": "/usr/local/go/bin/go", 
-    "go.toolsManagement.autoUpdate": false,
-
+    "go.goroot": "C:\\Program Files\\Go\\bin\\go", 
+    "go.toolsManagement.autoUpdate": true,
+    "go.toolsManagement.checkForUpdates": "off",
     "go.useLanguageServer": true,
     "gopls": {
         "ui.semanticTokens": true,  // 增强代码高亮
+        "ui.completion.usePlaceholders": true,
+        "ui.codelenses": {
+            "test": true
+          },
         "analyses": {
             "unusedparams": false,
             "unusedvariable": false,
@@ -13,11 +17,15 @@
         },
         "formatting.gofumpt": false  // 禁用gofumpt格式化
     },
+
+
+
     "go.buildFlags": ["-tags=ignore_unused"],
     "go.testFlags": ["-tags=ignore_unused"],
     "go.lintFlags": ["--disable=unused"],
     "go.vetFlags": ["-composites=false"],
     "go.formatTool": "gofmt",  // 使用gofmt而不是goimports
     "editor.formatOnSave": false,  // 禁用保存时格式化
-    "go.gocodeAutoBuild": false  // 禁用自动构建
+    "go.gocodeAutoBuild": false,  // 禁用自动构建
+
 }

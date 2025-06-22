@@ -12,10 +12,14 @@ type StockInfo struct {
 	Datas StockData
 }
 
+type StockDataDayList []*StockDataDay
+
 type StockData struct {
-	DayDatas []*StockDataDay
-	Points   []*StockDataDay
-	Sections []*StockDataDay
+	DayDatas   StockDataDayList
+	Points     StockDataDayList
+	Sections   StockDataDayList
+	HighPoints StockDataDayList
+	LowPoints  StockDataDayList
 }
 
 type StockDataDay struct {
