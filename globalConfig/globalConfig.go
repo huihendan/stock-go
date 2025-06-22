@@ -23,6 +23,11 @@ func init() {
 		LOG_PATH = "../Log/"
 	}
 
+	if sysType == "darwin" {
+		DATA_PATH = "/Users/beven/Item/stockData/"
+		LOG_PATH = "/Users/beven/Item/stock-go/Log/"
+	}
+
 	if sysType == "windows" {
 		DATA_PATH = "D:\\Data\\"
 		LOG_PATH = "D:\\Log\\"

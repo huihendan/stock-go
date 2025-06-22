@@ -20,12 +20,14 @@ func HighPointStrategy(stockCode string) {
 
 	for _, highPoint := range stock.Datas.HighPoints {
 
+		// indexDesc 为当前点距离当前时间的距离
 		indexDesc := stockSessionLen - highPoint.Index
 
 		if indexDesc > globalConfig.STOCK_SESSION_LEN {
 			continue
 		}
 
+		// 如果最大值距今超过 15天，则不满足条件
 		if indexDesc > globalConfig.STOCK_SESSION_HIGHTPOINT_LEN {
 			break
 		}
