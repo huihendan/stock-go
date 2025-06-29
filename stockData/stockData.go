@@ -15,11 +15,12 @@ type StockInfo struct {
 type StockDataDayList []*StockDataDay
 
 type StockData struct {
-	DayDatas   StockDataDayList
-	Points     StockDataDayList
-	Sections   StockDataDayList
-	HighPoints StockDataDayList
-	LowPoints  StockDataDayList
+	DayDatas          StockDataDayList
+	Points            StockDataDayList
+	Sections          StockDataDayList
+	HighPoints        StockDataDayList
+	LowPoints         StockDataDayList
+	SessionHighPoints StockDataDayList
 }
 
 type StockDataDay struct {
@@ -111,7 +112,7 @@ func DealStocksPointsByCode(code string) {
 		logger.Errorf("DealStocksPointsByCode failed code=%s", code)
 	}
 	stockInfo.DealStockPoints()
-	logger.Infof("DealStocksPointsByCode finished code=%s", code)
+	//logger.Infof("DealStocksPointsByCode finished code=%s", code)
 }
 
 func DealAllStocksPoints() {
@@ -128,7 +129,7 @@ func DealStocksSectionsByCode(code string) {
 	}
 
 	stockInfo.DealStockSession(0)
-	logger.Infof("DealStocksSectionsByCode finished code=%s", code)
+	//logger.Infof("DealStocksSectionsByCode finished code=%s", code)
 }
 
 func DealAllStocksSections() {

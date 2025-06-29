@@ -256,7 +256,16 @@ func NewLineHandler(h slog.Handler) *LineHandler {
 // Init 初始化日志系统，确保只初始化一次
 func Init() {
 	once.Do(func() {
-		logFile, err := os.OpenFile(globalConfig.LOG_PATH+"stock.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		// 获取进程PID
+		processPID := os.Getpid()
+
+		// 获取启动时间（当前时间）
+		startTime := time.Now().Format("01021504") // MMDDHHMM 格式
+
+		// 构建日志文件名
+		logFileName := fmt.Sprintf("stock_%d_%s.log", processPID, startTime)
+
+		logFile, err := os.OpenFile(globalConfig.LOG_PATH+logFileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
 			fmt.Printf("无法打开日志文件: %v\n", err)
 			return
@@ -278,7 +287,7 @@ func Init() {
 		slog.SetDefault(slog.New(handler))
 
 		// 输出一条测试日志，验证行号是否正常
-		slog.Info("日志系统初始化完成")
+		slog.Info("日志系统初始化完成", "logFile", logFileName)
 	})
 }
 

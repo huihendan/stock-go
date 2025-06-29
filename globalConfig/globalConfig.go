@@ -8,7 +8,7 @@ const (
 )
 
 const (
-	STOCK_DATA_LOAD_PCT = 30
+	STOCK_DATA_LOAD_PCT = 500
 	STOCK_DATA_LOAD_MOD = 0
 )
 
