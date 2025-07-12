@@ -1,0 +1,222 @@
+# Vim Golang 开发完整指导手册
+
+## 一、环境配置确认
+
+### 1. 检查 Go 版本
+```bash
+go version
+```
+
+### 2. 检查 GOPATH 和 GOROOT
+```bash
+go env GOPATH
+go env GOROOT
+```
+
+## 二、Vim 插件配置 (假设已安装)
+
+### 主要 Golang 插件
+- **vim-go**: 最重要的 Go 开发插件
+- **YouCompleteMe** 或 **coc.nvim**: 代码补全
+- **NERDTree**: 文件浏览
+- **tagbar**: 代码结构浏览
+
+## 三、Vim-Go 核心快捷键
+
+### 基础导航
+| 快捷键 | 功能 |
+|--------|------|
+| `gd` | 跳转到定义 |
+| `Ctrl-o` | 返回上一个位置 |
+| `Ctrl-i` | 前进到下一个位置 |
+| `:GoDoc` | 查看文档 |
+| `:GoInfo` | 查看函数签名 |
+
+### 代码编辑
+| 快捷键 | 功能 |
+|--------|------|
+| `:GoFmt` | 格式化代码 |
+| `:GoImports` | 自动导入包 |
+| `:GoRename` | 重命名变量/函数 |
+| `:GoFillStruct` | 自动填充结构体字段 |
+| `:GoAddTags` | 添加 struct tags |
+
+### 代码生成
+| 快捷键 | 功能 |
+|--------|------|
+| `:GoImpl` | 实现接口 |
+| `:GoKeyify` | 转换为 keyed struct literal |
+| `:GoFreevars` | 提取自由变量 |
+
+### 测试相关
+| 快捷键 | 功能 |
+|--------|------|
+| `:GoTest` | 运行当前包测试 |
+| `:GoTestFunc` | 运行当前函数测试 |
+| `:GoCoverage` | 显示测试覆盖率 |
+| `:GoAlternate` | 在源文件和测试文件间切换 |
+
+### 构建和运行
+| 快捷键 | 功能 |
+|--------|------|
+| `:GoBuild` | 构建项目 |
+| `:GoRun` | 运行当前文件 |
+| `:GoInstall` | 安装包 |
+
+## 四、常用 Vim 快捷键
+
+### 文件操作
+| 快捷键 | 功能 |
+|--------|------|
+| `:e filename` | 打开文件 |
+| `:w` | 保存 |
+| `:q` | 退出 |
+| `:wq` | 保存并退出 |
+| `:q!` | 强制退出不保存 |
+
+### 窗口管理
+| 快捷键 | 功能 |
+|--------|------|
+| `:sp` | 水平分割窗口 |
+| `:vsp` | 垂直分割窗口 |
+| `Ctrl-w h/j/k/l` | 窗口间移动 |
+| `Ctrl-w c` | 关闭当前窗口 |
+
+### 搜索和替换
+| 快捷键 | 功能 |
+|--------|------|
+| `/pattern` | 向前搜索 |
+| `?pattern` | 向后搜索 |
+| `n` | 下一个匹配 |
+| `N` | 上一个匹配 |
+| `:%s/old/new/g` | 全文替换 |
+
+## 五、项目编译和运行
+
+### 1. 编译整个项目
+```bash
+# 在项目根目录
+go build -o stockServer .
+```
+
+### 2. 运行项目
+```bash
+# 直接运行
+go run stockServer.go
+
+# 或运行编译后的可执行文件
+./stockServer
+```
+
+### 3. 运行测试
+```bash
+# 运行所有测试
+go test ./...
+
+# 运行特定包测试
+go test ./stockData
+
+# 运行特定测试函数
+go test -run TestFunctionName ./packageName
+```
+
+### 4. 在 Vim 中的快速操作
+```vim
+# 编译当前项目 (在 main 包中)
+:!go build -o stockServer .
+
+# 运行项目
+:!go run stockServer.go
+
+# 运行当前包测试
+:GoTest
+
+# 格式化并保存
+:GoFmt | :w
+```
+
+## 六、调试技巧
+
+### 1. 使用 fmt 调试
+```go
+fmt.Printf("Debug: %+v\n", variable)
+```
+
+### 2. 使用 log 包
+```go
+log.Printf("Debug info: %v", data)
+```
+
+### 3. 在 Vim 中查看错误
+```vim
+:copen    " 打开错误列表
+:cnext    " 下一个错误
+:cprev    " 上一个错误
+```
+
+## 七、高效开发工作流
+
+### 1. 打开项目
+```bash
+cd /root/gits/stock-go
+vim stockServer.go
+```
+
+### 2. 文件导航
+```vim
+:NERDTree           " 打开文件树
+:Tagbar             " 打开函数列表
+:GoDecls            " 快速跳转到声明
+:GoDeclsDir         " 浏览当前目录声明
+```
+
+### 3. 代码编写流程
+1. 编写代码
+2. `:GoFmt` 格式化
+3. `:GoImports` 整理导入
+4. `:GoBuild` 检查语法
+5. `:GoTest` 运行测试
+6. `:w` 保存
+
+### 4. 常用命令组合
+```vim
+# 保存并运行
+:w | !go run %
+
+# 格式化、保存并测试
+:GoFmt | :w | :GoTest
+
+# 构建并运行
+:GoBuild | !./stockServer
+```
+
+## 八、模块管理
+
+### 1. 初始化模块 (如果需要)
+```bash
+go mod init module-name
+```
+
+### 2. 添加依赖
+```bash
+go get package-name
+```
+
+### 3. 整理模块
+```bash
+go mod tidy
+```
+
+## 九、性能优化命令
+
+### 1. 生成性能报告
+```bash
+go test -cpuprofile=cpu.prof -memprofile=mem.prof -bench=.
+```
+
+### 2. 查看性能报告
+```bash
+go tool pprof cpu.prof
+```
+
+这份指导手册涵盖了使用 Vim 进行 Golang 开发的核心内容，包括快捷键、编译运行和调试技巧。
