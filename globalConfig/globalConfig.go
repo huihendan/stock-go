@@ -19,7 +19,7 @@ func init() {
 
 	sysType := runtime.GOOS
 	if sysType == "linux" {
-		DATA_PATH = "../Data/"
+		DATA_PATH = "/home/beven/gits/stockData/"
 		LOG_PATH = "../Log/"
 	}
 
