@@ -15,6 +15,9 @@ const (
 var DATA_PATH = "../Data/"
 var LOG_PATH = "../Log/"
 
+var ExecuteUpdataDataTime = "19:00"
+var ExecuteAnalyseDataTime = "19:30"
+
 func init() {
 
 	sysType := runtime.GOOS

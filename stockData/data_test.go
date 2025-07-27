@@ -14,7 +14,7 @@ func TestLoadData(t *testing.T) {
 
 func TestLoadStockList(t *testing.T) {
 	//stockList := LoadStockList()
-	LoadStockList()
+	LoadPreStockList()
 
 	slog.Info("stock list size", "size", len(StockList))
 }

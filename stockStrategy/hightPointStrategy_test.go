@@ -11,7 +11,7 @@ import (
 func TestHighPointStrategy(t *testing.T) {
 	logger.Info("TestHighPointStrategy start")
 	//1. 加载所有股票列表
-	stockData.LoadStockList()
+	stockData.LoadPreStockList()
 	//2. 加载股票数据
 	stockData.LoadDataOneByOne()
 
@@ -26,7 +26,7 @@ func TestHighPointStrategyDayByDay(t *testing.T) {
 	startTime := time.Now()
 	logger.Info("TestHighPointStrategyDayByDay start")
 	//1. 加载所有股票列表
-	stockData.LoadStockList()
+	stockData.LoadPreStockList()
 	//2. 加载股票数据
 	stockData.LoadDataOneByOne()
 
@@ -45,7 +45,7 @@ func TestHighPointStrategyDayByDay2(t *testing.T) {
 	startTime := time.Now()
 	logger.Info("TestHighPointStrategyDayByDay2 start")
 	//1. 加载所有股票列表
-	stockData.LoadStockList()
+	stockData.LoadPreStockList()
 	//2. 加载股票数据
 	stockData.LoadDataOneByOne()
 

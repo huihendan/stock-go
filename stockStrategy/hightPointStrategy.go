@@ -7,18 +7,30 @@ import (
 	"stock/stockData"
 )
 
-func HighPointStrategy(stockCode string) {
+func HighPointStrategy(stockCode string) (isHighPoint bool, dataStr string) {
+	if stockCode == "" {
+		logger.Warnf("股票代码为空")
+		return false, ""
+	}
 
 	stock := stockData.GetstockBycode(stockCode)
+	if stock == nil {
+		logger.Warnf("无法获取股票 %s 数据", stockCode)
+		return false, ""
+	}
+	
 	stockSessionLen := len(stock.Datas.DayDatas)
 
 	if stockSessionLen < globalConfig.STOCK_SESSION_LEN {
-
 		logger.Infof("stock %s session len is %d < %d", stockCode, stockSessionLen, globalConfig.STOCK_SESSION_LEN)
-		return
+		return false, ""
 	}
 
 	for _, highPoint := range stock.Datas.HighPoints {
+		if highPoint == nil {
+			logger.Warnf("股票 %s 存在空的高点数据", stockCode)
+			continue
+		}
 
 		// indexDesc 为当前点距离当前时间的距离
 		indexDesc := stockSessionLen - highPoint.Index
@@ -33,19 +45,30 @@ func HighPointStrategy(stockCode string) {
 		}
 
 		if indexDesc < globalConfig.STOCK_SESSION_HIGHTPOINT_LEN {
-
-			if highPoint.PriceA < stock.Datas.DayDatas[stockSessionLen-globalConfig.STOCK_SESSION_LEN].PriceA {
+			sessionStartIndex := stockSessionLen - globalConfig.STOCK_SESSION_LEN
+			if sessionStartIndex < 0 || sessionStartIndex >= len(stock.Datas.DayDatas) {
+				logger.Warnf("股票 %s 数组索引越界", stockCode)
+				continue
+			}
+			
+			sessionStartData := stock.Datas.DayDatas[sessionStartIndex]
+			if sessionStartData == nil {
+				logger.Warnf("股票 %s 起始数据为空", stockCode)
 				continue
 			}
 
-			beginDataStr := stock.Datas.DayDatas[stockSessionLen-globalConfig.STOCK_SESSION_LEN].DataStr
+			if highPoint.PriceA < sessionStartData.PriceA {
+				continue
+			}
+
+			beginDataStr := sessionStartData.DataStr
 			logger.Infof("HighPointStrategy stockCode:%s indexDesc:%d, DateStr:%s, sessionBeginDate:%s", stockCode, indexDesc, highPoint.DataStr, beginDataStr)
 
 			painter.PaintStockKline(stockCode)
-			break
+			return true, highPoint.DataStr
 		}
-
 	}
+	return false, ""
 }
 
 // HighPointStrategyDayByDay 从 STOCK_SESSION_LEN 开始，对每一天的数据进行判断，检查是否是当前区间的最大值

@@ -16,7 +16,8 @@ import (
 
 func main() {
 
-	utils.DoWorkEveryDayOnce(doworkEveryDay, nil)
+	executeTime := globalConfig.ExecuteUpdataDataTime
+	utils.DoWorkEveryDayOnce(doworkEveryDay, &executeTime)
 
 	// 等待中断信号
 	sigChan := make(chan os.Signal, 1)

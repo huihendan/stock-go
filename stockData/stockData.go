@@ -40,9 +40,17 @@ var StockList = make(map[string]string)
 var Stocks = make(map[string]*StockInfo)
 
 func GetstockBycode(code string) *StockInfo {
+	if code == "" {
+		logger.Warnf("股票代码为空")
+		return nil
+	}
+	
 	stock := Stocks[code]
 	if stock == nil {
 		stock = LoadDataOneByCode(code)
+		if stock == nil {
+			logger.Warnf("加载股票 %s 数据失败", code)
+		}
 	}
 	return stock
 }
@@ -60,6 +68,13 @@ func LoadDataOneByOne() {
 		DealStocksSectionsByCode(code)
 	}
 	logger.Infof("Stocks loaded size=%d", len(Stocks))
+}
+
+func ReLoadAllData() {
+	Stocks = make(map[string]*StockInfo)
+	StockList = make(map[string]string)
+	LoadAllStockList()
+	LoadDataOneByOne()
 }
 
 func LoadDataOneByCode(code string) (stock *StockInfo) {
@@ -141,7 +156,7 @@ func DealAllStocksSections() {
 
 func Start() {
 	//1. 加载所有股票列表
-	LoadStockList()
+	LoadPreStockList()
 	//2. 加载股票数据
 	go LoadDataOneByOne()
 	//LoadAllData()

@@ -26,7 +26,36 @@ import (
 // }
 
 // 加载股票列表
-func LoadStockList() [][]string {
+func LoadAllStockList() [][]string {
+	fileName := globalConfig.DATA_PATH + "stockList.csv"
+	fs1, _ := os.Open(fileName)
+	r1 := csv.NewReader(fs1)
+	content, err := r1.ReadAll()
+	if err != nil {
+		logger.Error("can not readall", "err", err)
+	}
+
+	for _, row := range content {
+
+		row0 := string(row[0])
+		row1 := string(row[1])
+		row2 := string(row[2])
+		var code string
+		if strings.Contains(row0, "SZ") {
+			code = "sz." + row1
+		} else {
+			code = "sh." + row1
+		}
+		StockList[code] = row2
+
+	}
+
+	slog.Info("stock list size", "size", len(content))
+	return content
+}
+
+// 加载股票列表
+func LoadPreStockList() [][]string {
 	fileName := globalConfig.DATA_PATH + "stockList.csv"
 	fs1, _ := os.Open(fileName)
 	r1 := csv.NewReader(fs1)
