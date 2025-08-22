@@ -28,9 +28,9 @@ func main() {
 	case <-sigChan:
 		logger.Infof("收到中断信号，正在优雅关闭...")
 
-		// 等待定时任务停止，最多等待5秒
+		// 等待定时任务停止，最多等待30分钟
 		select {
-		case <-time.After(5 * time.Second):
+		case <-time.After(30 * time.Minute):
 			logger.Warnf("定时任务停止超时")
 		}
 
@@ -44,7 +44,7 @@ func doworkEveryDay() {
 }
 
 func analyseData() error {
-	logger.Info("TestHighPointStrategy start")
+	logger.Info("analyseData start")
 
 	stockData.ReLoadAllData()
 
@@ -75,12 +75,12 @@ func analyseData() error {
 	message := ""
 	for _, stock := range stockList {
 		message += fmt.Sprintf("%s\n", stock)
-
+	}
+	if message != "" {
 		utils.SendWeChatMessage(fmt.Sprintf("发现高点:\n %s", message))
-
-		logger.Infof("TestHighPointStrategy end - 成功处理 %d 只股票", successCount)
-		return lastErr
 	}
 
-	return nil
+	logger.Infof("analyseData end - 成功处理 %d 只股票", successCount)
+
+	return lastErr
 }
