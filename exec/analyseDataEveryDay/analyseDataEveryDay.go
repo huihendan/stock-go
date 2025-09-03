@@ -55,32 +55,36 @@ func analyseData() error {
 
 	for _, stock := range stockData.Stocks {
 		if stock == nil {
-			logger.Warnf("股票数据为空，跳过")
+			logger.Warnf("stock数据为空，跳过")
 			continue
 		}
 
-		if isHighPoint, dataStr := stockStrategy.HighPointStrategy(stock.Code); isHighPoint {
+		if isHighPoint, dataStr := stockStrategy.HighPointStrategyLast(stock.Code); isHighPoint {
 			logger.Infof("发现高点: %s - %s", stock.Code, dataStr)
 			successCount++
 			stockList = append(stockList, stock.Code)
 		} else if dataStr != "" {
-			logger.Infof("股票 %s 处理完成，未发现高点", stock.Code)
+			logger.Infof("stock %s 处理完成，未发现高点", stock.Code)
 			successCount++
 		} else {
-			logger.Warnf("股票 %s 处理失败", stock.Code)
-			lastErr = fmt.Errorf("股票 %s 处理失败", stock.Code)
+			logger.Warnf("stock %s 处理失败", stock.Code)
+			lastErr = fmt.Errorf("stock %s 处理失败", stock.Code)
 		}
 	}
 
+	logger.Infof("找到高点stock数量: %d", len(stockList))
 	message := ""
 	for _, stock := range stockList {
 		message += fmt.Sprintf("%s\n", stock)
 	}
 	if message != "" {
-		utils.SendWeChatMessage(fmt.Sprintf("发现高点:\n %s", message))
+		finalMessage := fmt.Sprintf("发现高点:\n %s", message)
+		logger.Infof("发送微信消息长度: %d 字节", len(finalMessage))
+		logger.Infof("完整消息内容: %s", finalMessage)
+		utils.SendWeChatMessage(finalMessage)
 	}
 
-	logger.Infof("analyseData end - 成功处理 %d 只股票", successCount)
+	logger.Infof("analyseData end - 成功处理 %d 只stock", successCount)
 
 	return lastErr
 }

@@ -26,7 +26,7 @@ func PlotPoints(stockCode string) {
 	}
 
 	p := plot.New()
-	p.Title.Text = "股票价格走势图 - " + stockCode
+	p.Title.Text = "stock价格走势图 - " + stockCode
 	p.X.Label.Text = "时间索引"
 	p.Y.Label.Text = "价格"
 

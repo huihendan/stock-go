@@ -25,7 +25,7 @@ import (
 // 	slog.Info("Data Path", "path", path)
 // }
 
-// 加载股票列表
+// 加载stock列表
 func LoadAllStockList() [][]string {
 	fileName := globalConfig.DATA_PATH + "stockList.csv"
 	fs1, _ := os.Open(fileName)
@@ -54,7 +54,7 @@ func LoadAllStockList() [][]string {
 	return content
 }
 
-// 加载股票列表
+// 加载stock列表
 func LoadPreStockList() [][]string {
 	fileName := globalConfig.DATA_PATH + "stockList.csv"
 	fs1, _ := os.Open(fileName)
