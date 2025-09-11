@@ -62,7 +62,8 @@ func analyseData() error {
 		if isHighPoint, dataStr := stockStrategy.HighPointStrategyLast(stock.Code); isHighPoint {
 			logger.Infof("发现高点: %s - %s", stock.Code, dataStr)
 			successCount++
-			stockList = append(stockList, stock.Code)
+			stockStr := stock.Code + " " +  stock.Name
+			stockList = append(stockList, stockStr)
 		} else if dataStr != "" {
 			logger.Infof("stock %s 处理完成，未发现高点", stock.Code)
 			successCount++
