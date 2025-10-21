@@ -55,7 +55,7 @@ func LoadAllStockList() [][]string {
 }
 
 // 加载stock列表
-func LoadPreStockList() [][]string {
+func LoadPreStockList() map[string]string {
 	fileName := globalConfig.DATA_PATH + "stockList.csv"
 	fs1, _ := os.Open(fileName)
 	r1 := csv.NewReader(fs1)
@@ -85,7 +85,7 @@ func LoadPreStockList() [][]string {
 	}
 
 	slog.Info("stock list size", "size", len(content))
-	return content
+	return StockList
 }
 
 func LoadFromCsv(code string) (stockData StockData) {

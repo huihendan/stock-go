@@ -57,26 +57,29 @@ type Operate struct {
 	StockNum    int
 }
 
-// DealStrategys 策略分发函数 - 根据策略模式调用相应策略
-func DealStrategys(code string, strategyMode int) map[string]OperateRecord {
+func NewStrategy(strategyMode int) StockStrategy {
 	switch strategyMode {
 	case Strategy_Mode_1:
-		// 使用新的策略模式实现
-		strategy := NewBuyHighSellLowStrategy()
-		return strategy.DealStrategy(code)
+		return NewBuyHighSellLowStrategy()
 	case Strategy_Mode_2:
-		return dealStrategysMode2(code, strategyMode)
+		//return NewBreakoutStrategy()
 	case Strategy_Mode_3:
-		return dealStrategysMode3(code, strategyMode)
+		//return NewSwingStrategy()
 	case Strategy_Mode_4:
-		return dealStrategysMode4(code, strategyMode)
+		//return New大盘Strategy()
 	case Strategy_Mode_5:
-		return dealStrategysMode5(code, strategyMode)
+		//return New板块突破Strategy()
 	case Strategy_Mode_6:
-		return dealStrategysMode6(code, strategyMode)
-	default:
-		return make(map[string]OperateRecord)
+		//return New板块轮动Strategy()
 	}
+
+	return nil
+}
+
+// DealStrategys 策略分发函数 - 根据策略模式调用相应策略
+func DealStrategys(code string, strategyMode int) map[string]OperateRecord {
+	strategy := NewStrategy(strategyMode)
+	return strategy.DealStrategy(code)
 }
 
 // dealStrategysMode1 已废弃 - 请使用 BuyHighSellLowStrategy

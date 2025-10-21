@@ -34,6 +34,27 @@ func NewBuyHighSellLowStrategyWithConfig(lookbackDays int, sellDropPercent float
 	}
 }
 
+// 暂时采用随机策略
+func (strategy *BuyHighSellLowStrategy) DealSelectStockCodes() (stockCodes []string) {
+	// 加载股票列表和数据
+	stockList := stockData.LoadPreStockList()
+	for stockCode, _ := range stockList {
+		stock := stockData.GetstockBycode(stockCode)
+		if stock == nil {
+			continue
+		}
+		if stock.Datas.DayDatas == nil {
+			continue
+		}
+		if len(stock.Datas.DayDatas) < strategy.LookbackDays {
+			continue
+		}
+		stockCodes = append(stockCodes, stockCode)
+	}
+
+	return stockCodes
+}
+
 // DealStrategy 执行策略
 func (strategy *BuyHighSellLowStrategy) DealStrategy(code string) (operates map[string]OperateRecord) {
 	operates = make(map[string]OperateRecord)

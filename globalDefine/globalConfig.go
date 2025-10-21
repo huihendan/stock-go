@@ -1,4 +1,4 @@
-package globalConfig
+package globaldefine
 
 import "runtime"
 
@@ -8,8 +8,8 @@ const (
 )
 
 const (
-	STOCK_DATA_LOAD_PCT = 500
-	STOCK_DATA_LOAD_MOD = 0
+	STOCK_DATA_LOAD_PCT = 50
+	STOCK_DATA_LOAD_MOD = 2
 )
 
 var DATA_PATH = "../Data/"
