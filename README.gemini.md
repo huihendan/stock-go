@@ -1,17 +1,17 @@
-# Stock-Go: 股票数据分析与可视化平台
+# Stock-Go: 票票数据分析与可视化平台
 
 [![Go Version](https://img.shields.io/badge/Go-1.18+-blue.svg)](https://golang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-`Stock-Go` 是一个使用 Golang 构建的股票数据分析和可视化工具。它旨在提供一个完整的解决方案，从数据获取、处理、策略分析到结果可视化和通知。
+`Stock-Go` 是一个使用 Golang 构建的票票数据分析和可视化工具。它旨在提供一个完整的解决方案，从数据获取、处理、策略分析到结果可视化和通知。
 
 ## 核心功能
 
-- **HTTP 服务**: 内置一个轻量级的 Web 服务器，通过 API 接口提供股票数据查询服务。
-- **数据可视化**: 能够生成股票的 K-线图、走势图等，便于直观分析。
-- **策略分析**: 包含可扩展的股票分析策略模块，例如已实现的“高点策略”。
-- **自动化任务**: 提供独立的每日执行程序，用于自动化更新股票数据和执行每日分析。
-- **Python 数据脚本**: 使用 Python 脚本从网络获取原始股票数据，并进行预处理。
+- **HTTP 服务**: 内置一个轻量级的 Web 服务器，通过 API 接口提供票票数据查询服务。
+- **数据可视化**: 能够生成票票的 K-线图、走势图等，便于直观分析。
+- **策略分析**: 包含可扩展的票票分析策略模块，例如已实现的“高点策略”。
+- **自动化任务**: 提供独立的每日执行程序，用于自动化更新票票数据和执行每日分析。
+- **Python 数据脚本**: 使用 Python 脚本从网络获取原始票票数据，并进行预处理。
 - **微信通知**: 集成了微信消息推送功能，可以将分析结果或警报发送给用户。
 
 ## 项目结构
@@ -19,21 +19,21 @@
 ```
 /
 ├── Data/                  # Python 数据处理脚本
-│   ├── getAllStockDatas.py  # 获取全量股票数据
-│   └── updateDayDatas.py    # 更新每日股票数据
+│   ├── getAllStockDatas.py  # 获取全量票票数据
+│   └── updateDayDatas.py    # 更新每日票票数据
 ├── exec/                  # 独立的、可每日执行的 Go 程序
 │   ├── analyseDataEveryDay/ # 每日分析任务
 │   └── updateDataEveryDay/  # 每日数据更新任务
 ├── globalConfig/          # 全局配置文件
 ├── http/                  # HTTP 服务器相关代码
 │   ├── server.go            # 服务器启动与路由
-│   └── stockHandler.go      # 股票相关的 HTTP Handler
+│   └── stockHandler.go      # 票票相关的 HTTP Handler
 ├── logger/                # 日志模块
 ├── painter/               # 图表绘制与可视化模块
-├── stockData/             # 股票数据定义与处理核心逻辑
-│   ├── defindStock.go       # 股票数据结构定义
+├── stockData/             # 票票数据定义与处理核心逻辑
+│   ├── defindStock.go       # 票票数据结构定义
 │   └── loadData.go          # 数据加载与解析
-├── stockStrategy/         # 股票分析策略
+├── stockStrategy/         # 票票分析策略
 │   └── hightPointStrategy.go # 高点策略实现
 ├── utils/                 # 通用工具类
 │   └── wechat.go            # 微信消息推送工具
@@ -77,7 +77,7 @@ pip install requests pandas
 
 Go 程序依赖于由 Python 脚本生成的 CSV 数据文件。在运行 Go 应用之前，必须先执行这些脚本。
 
-**a. 获取所有股票列表和基础数据**
+**a. 获取所有票票列表和基础数据**
 ```bash
 python Data/getAllStockDatas.py
 ```
@@ -125,11 +125,11 @@ go run exec/analyseDataEveryDay/analyseDataEveryDay.go
 
 ### `stockData` 模块
 
-这是项目的核心数据层。它负责定义股票的数据结构（如 `Stock`、`DayLine`），并处理数据的加载（从 CSV）、解析和存储。
+这是项目的核心数据层。它负责定义票票的数据结构（如 `Stock`、`DayLine`），并处理数据的加载（从 CSV）、解析和存储。
 
 ### `painter` 模块
 
-该模块是项目的可视化核心。它利用 `gonum/plot`、`go-echarts` 等库将股票数据渲染成图表（如 PNG 图片）。`painter/line.go` 是一个很好的例子，展示了如何生成一只股票的走势图。
+该模块是项目的可视化核心。它利用 `gonum/plot`、`go-echarts` 等库将票票数据渲染成图表（如 PNG 图片）。`painter/line.go` 是一个很好的例子，展示了如何生成一只票票的走势图。
 
 ### `stockStrategy` 模块
 

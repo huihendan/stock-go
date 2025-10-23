@@ -30,11 +30,11 @@ func TestBuyHighSellLowStrategy(t *testing.T) {
 		totalAllInvestment = 0.0 // 总投入资金
 	)
 
-	// 测试几个股票
+	// 测试几个票票
 	testCodes := strategy.DealSelectStockCodes()
 	for _, code := range testCodes {
 		totalStocks++
-		logger.Infof("测试股票: %s", code)
+		logger.Infof("测试票票: %s", code)
 
 		// 执行策略
 		operates := strategy.DealStrategy(code)
@@ -44,7 +44,7 @@ func TestBuyHighSellLowStrategy(t *testing.T) {
 		completedTrades := 0
 		totalProfit := 0.0
 		winCount := 0
-		totalInvestment := 0.0 // 该股票的总投入（买入价格 × 股数）
+		totalInvestment := 0.0 // 该票票的总投入（买入价格 × 股数）
 
 		for _, record := range operates {
 			if record.Status == 2 { // 已完成交易
@@ -68,13 +68,13 @@ func TestBuyHighSellLowStrategy(t *testing.T) {
 			}
 		}
 
-		// 输出单个股票统计
+		// 输出单个票票统计
 		if completedTrades > 0 {
 			winRate := float64(winCount) / float64(completedTrades) * 100
 			avgProfit := totalProfit / float64(completedTrades)
 			profitRate := (totalProfit / totalInvestment) * 100 // 收益率 = 总收益 / 总投入
 
-			logger.Infof("股票 %s 统计:", code)
+			logger.Infof("票票 %s 统计:", code)
 			logger.Infof("  总交易次数: %d", totalTrades)
 			logger.Infof("  完成交易次数: %d", completedTrades)
 			logger.Infof("  总收益: %.2f", totalProfit)
@@ -91,7 +91,7 @@ func TestBuyHighSellLowStrategy(t *testing.T) {
 			totalAllProfitRate += profitRate
 			totalAllInvestment += totalInvestment
 		} else {
-			logger.Infof("股票 %s 没有完成的交易", code)
+			logger.Infof("票票 %s 没有完成的交易", code)
 		}
 
 		fmt.Println()
@@ -99,10 +99,10 @@ func TestBuyHighSellLowStrategy(t *testing.T) {
 
 	// 打印汇总统计
 	logger.Info(strings.Repeat("=", 60))
-	logger.Info("所有股票汇总统计")
+	logger.Info("所有票票汇总统计")
 	logger.Info(strings.Repeat("=", 60))
-	logger.Infof("测试股票总数: %d", totalStocks)
-	logger.Infof("有交易的股票数: %d", stocksWithTrades)
+	logger.Infof("测试票票总数: %d", totalStocks)
+	logger.Infof("有交易的票票数: %d", stocksWithTrades)
 	logger.Infof("总交易次数: %d", totalAllTrades)
 	logger.Infof("总完成交易次数: %d", totalAllCompleted)
 
@@ -115,9 +115,9 @@ func TestBuyHighSellLowStrategy(t *testing.T) {
 		logger.Infof("总收益: %.2f", totalAllProfit)
 		logger.Infof("平均每笔收益: %.2f", overallAvgProfit)
 		logger.Infof("总收益率: %.2f%%", overallProfitRate)
-		logger.Infof("平均股票收益率: %.2f%%", avgStockProfitRate)
+		logger.Infof("平均票票收益率: %.2f%%", avgStockProfitRate)
 		logger.Infof("总胜率: %.2f%%", overallWinRate)
-		logger.Infof("平均每股票完成交易次数: %.2f", float64(totalAllCompleted)/float64(stocksWithTrades))
+		logger.Infof("平均每票票完成交易次数: %.2f", float64(totalAllCompleted)/float64(stocksWithTrades))
 	} else {
 		logger.Info("没有完成的交易")
 	}

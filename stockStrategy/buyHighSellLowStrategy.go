@@ -36,7 +36,7 @@ func NewBuyHighSellLowStrategyWithConfig(lookbackDays int, sellDropPercent float
 
 // 暂时采用随机策略
 func (strategy *BuyHighSellLowStrategy) DealSelectStockCodes() (stockCodes []string) {
-	// 加载股票列表和数据
+	// 加载票票列表和数据
 	stockList := stockData.LoadPreStockList()
 	for stockCode, _ := range stockList {
 		stock := stockData.GetstockBycode(stockCode)
@@ -59,7 +59,7 @@ func (strategy *BuyHighSellLowStrategy) DealSelectStockCodes() (stockCodes []str
 func (strategy *BuyHighSellLowStrategy) DealStrategy(code string) (operates map[string]OperateRecord) {
 	operates = make(map[string]OperateRecord)
 
-	// 通过GetstockBycode获取股票数据
+	// 通过GetstockBycode获取票票数据
 	stock := stockData.GetstockBycode(code)
 	if stock == nil {
 		return operates
