@@ -10,7 +10,7 @@ import globalDefine "stock/globalDefine"
 // 	BuyIndex int     // 买入的数据索引
 // }
 
-// StockStrategy 股票交易策略接口
+// StockStrategy 票票交易策略接口
 type StockStrategy interface {
 	//执行策略，通过GetstockBycode内部获取数据
 	DealStrategy(code string) (operates map[string]OperateRecord)

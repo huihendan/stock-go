@@ -20,7 +20,7 @@ const (
 	Strategy_Mode_6 = 6 // 板块轮动
 )
 
-// StockData 旧版本的股票数据结构（用于CSV加载）
+// StockData 旧版本的票票数据结构（用于CSV加载）
 type StockData struct {
 	Date        time.Time
 	Open        float64
@@ -371,7 +371,7 @@ func dealStrategysMode6(code string, strategyMode int) map[string]OperateRecord 
 // ====== 辅助函数 ======
 // 以下是策略计算的辅助函数，可被各个策略共用
 
-// loadStockData 从CSV文件加载股票数据（旧方法）
+// loadStockData 从CSV文件加载票票数据（旧方法）
 // 注意：新的策略实现应该使用 stockData.GetstockBycode
 func loadStockData(code string) ([]StockData, error) {
 	filename := fmt.Sprintf("Data/%s_ALL.csv", code)

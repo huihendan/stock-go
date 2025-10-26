@@ -83,7 +83,7 @@ import (
 )
 
 func main() {
-    // 加载股票数据
+    // 加载票票数据
     stockData.LoadPreStockList()
     stockData.LoadDataOneByOne()
     
