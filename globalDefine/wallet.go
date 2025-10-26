@@ -1,7 +1,7 @@
 package globaldefine
 
 type Wallet struct {
-	Cash      float64
+	Cash      float32
 	Positions []Position
 }
 
@@ -9,16 +9,19 @@ type Position struct {
 	StockCode string
 	StockName string
 	StockNum  int
-	Profit    float64
-	BuyPrice  float64
-	SellPrice float64
+	Profit    float32
+	BuyPrice  float32
+	SellPrice float32
 	BuyDate   string
+	Status    int // 1-持仓 2-空仓
+	BuyIndex  int
+	SellIndex int
 }
 
 type Operate struct {
 	OperateType int
-	BuyPrice    float64
-	SellPrice   float64
+	BuyPrice    float32
+	SellPrice   float32
 	OperateDate string
 	OperateTime string
 	StockCode   string
@@ -29,11 +32,11 @@ type Operate struct {
 type OperateRecord struct {
 	StockCode   string
 	StockName   string
-	StockNum    float64
+	StockNum    int
 	BuyOperate  Operate
 	SellOperate Operate
 	Status      int
-	Profit      float64
+	Profit      float32
 	OperateDate string
 	OperateTime string
 }

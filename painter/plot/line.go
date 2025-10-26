@@ -1,7 +1,7 @@
 package plot
 
 import (
-	"stock/globalConfig"
+	globalDefine "stock/globalDefine"
 	"stock/logger"
 	"stock/stockData"
 
@@ -44,5 +44,5 @@ func PlotPoints(stockCode string) {
 	// 	width = 20 * vg.Inch
 	// }
 
-	p.Save(width, 4*vg.Inch, globalConfig.LOG_PATH+"/plot/"+stockCode+".png")
+	p.Save(width, 4*vg.Inch, globalDefine.LOG_PATH+"/plot/"+stockCode+".png")
 }

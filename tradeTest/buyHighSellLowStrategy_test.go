@@ -1,4 +1,4 @@
-package stockStrategy
+package tradeTest
 
 import (
 	"fmt"

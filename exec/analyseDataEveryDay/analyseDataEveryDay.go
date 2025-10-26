@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
-	"stock/globalConfig"
+	globalDefine "stock/globalDefine"
 	"stock/logger"
 	"stock/stockData"
 	"stock/stockStrategy"
@@ -15,7 +15,7 @@ import (
 
 func main() {
 
-	executeTime := globalConfig.ExecuteAnalyseDataTime
+	executeTime := globalDefine.ExecuteAnalyseDataTime
 
 	// 启动定时任务
 	utils.DoWorkEveryDayOnce(doworkEveryDay, &executeTime)
@@ -62,7 +62,7 @@ func analyseData() error {
 		if isHighPoint, dataStr := stockStrategy.HighPointStrategyLast(stock.Code); isHighPoint {
 			logger.Infof("发现高点: %s - %s", stock.Code, dataStr)
 			successCount++
-			stockStr := stock.Code + " " +  stock.Name
+			stockStr := stock.Code + " " + stock.Name
 			stockList = append(stockList, stockStr)
 		} else if dataStr != "" {
 			logger.Infof("stock %s 处理完成，未发现高点", stock.Code)

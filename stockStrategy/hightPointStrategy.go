@@ -1,7 +1,7 @@
 package stockStrategy
 
 import (
-	"stock/globalConfig"
+	globalDefine "stock/globalDefine"
 	"stock/logger"
 	"stock/painter"
 	"stock/stockData"
@@ -18,11 +18,11 @@ func HighPointStrategy(stockCode string) (isHighPoint bool, dataStr string) {
 		logger.Warnf("无法获取stock %s 数据", stockCode)
 		return false, ""
 	}
-	
+
 	stockSessionLen := len(stock.Datas.DayDatas)
 
-	if stockSessionLen < globalConfig.STOCK_SESSION_LEN {
-		logger.Infof("stock %s session len is %d < %d", stockCode, stockSessionLen, globalConfig.STOCK_SESSION_LEN)
+	if stockSessionLen < globalDefine.STOCK_SESSION_LEN {
+		logger.Infof("stock %s session len is %d < %d", stockCode, stockSessionLen, globalDefine.STOCK_SESSION_LEN)
 		return false, ""
 	}
 
@@ -35,22 +35,22 @@ func HighPointStrategy(stockCode string) (isHighPoint bool, dataStr string) {
 		// indexDesc 为当前点距离当前时间的距离
 		indexDesc := stockSessionLen - highPoint.Index
 
-		if indexDesc > globalConfig.STOCK_SESSION_LEN {
+		if indexDesc > globalDefine.STOCK_SESSION_LEN {
 			continue
 		}
 
 		// 如果最大值距今超过 15天，则不满足条件
-		if indexDesc > globalConfig.STOCK_SESSION_HIGHTPOINT_LEN {
+		if indexDesc > globalDefine.STOCK_SESSION_HIGHTPOINT_LEN {
 			break
 		}
 
-		if indexDesc < globalConfig.STOCK_SESSION_HIGHTPOINT_LEN {
-			sessionStartIndex := stockSessionLen - globalConfig.STOCK_SESSION_LEN
+		if indexDesc < globalDefine.STOCK_SESSION_HIGHTPOINT_LEN {
+			sessionStartIndex := stockSessionLen - globalDefine.STOCK_SESSION_LEN
 			if sessionStartIndex < 0 || sessionStartIndex >= len(stock.Datas.DayDatas) {
 				logger.Warnf("stock %s 数组索引越界", stockCode)
 				continue
 			}
-			
+
 			sessionStartData := stock.Datas.DayDatas[sessionStartIndex]
 			if sessionStartData == nil {
 				logger.Warnf("stock %s 起始数据为空", stockCode)
@@ -76,8 +76,8 @@ func HighPointStrategyDayByDay(stockCode string) {
 	stock := stockData.GetstockBycode(stockCode)
 	stockSessionLen := len(stock.Datas.DayDatas)
 
-	if stockSessionLen < globalConfig.STOCK_SESSION_LEN {
-		logger.Infof("stock %s session len is %d < %d", stockCode, stockSessionLen, globalConfig.STOCK_SESSION_LEN)
+	if stockSessionLen < globalDefine.STOCK_SESSION_LEN {
+		logger.Infof("stock %s session len is %d < %d", stockCode, stockSessionLen, globalDefine.STOCK_SESSION_LEN)
 		return
 	}
 
@@ -86,7 +86,7 @@ func HighPointStrategyDayByDay(stockCode string) {
 	queue := make([]int, 0)
 
 	// 先处理前 STOCK_SESSION_LEN 天的数据，建立初始队列
-	for i := 0; i < globalConfig.STOCK_SESSION_LEN; i++ {
+	for i := 0; i < globalDefine.STOCK_SESSION_LEN; i++ {
 		// 移除队列中所有小于当前价格的价格对应的索引
 		for len(queue) > 0 && stock.Datas.DayDatas[queue[len(queue)-1]].PriceA < stock.Datas.DayDatas[i].PriceA {
 			queue = queue[:len(queue)-1]
@@ -95,11 +95,11 @@ func HighPointStrategyDayByDay(stockCode string) {
 	}
 
 	// 从第 STOCK_SESSION_LEN 天开始遍历
-	for i := globalConfig.STOCK_SESSION_LEN; i < stockSessionLen; i++ {
+	for i := globalDefine.STOCK_SESSION_LEN; i < stockSessionLen; i++ {
 		currentDay := stock.Datas.DayDatas[i]
 
 		// 移除队列中已经超出滑动窗口范围的索引
-		for len(queue) > 0 && queue[0] <= i-globalConfig.STOCK_SESSION_LEN {
+		for len(queue) > 0 && queue[0] <= i-globalDefine.STOCK_SESSION_LEN {
 			queue = queue[1:]
 		}
 
@@ -135,16 +135,16 @@ func HighPointStrategyLast(stockCode string) (isHighPoint bool, dataStr string) 
 		logger.Warnf("无法获取stock %s 数据", stockCode)
 		return false, ""
 	}
-	
+
 	stockSessionLen := len(stock.Datas.DayDatas)
 
-	if stockSessionLen < globalConfig.STOCK_SESSION_LEN {
-		logger.Infof("stock %s session len is %d < %d", stockCode, stockSessionLen, globalConfig.STOCK_SESSION_LEN)
+	if stockSessionLen < globalDefine.STOCK_SESSION_LEN {
+		logger.Infof("stock %s session len is %d < %d", stockCode, stockSessionLen, globalDefine.STOCK_SESSION_LEN)
 		return false, ""
 	}
 
 	// 检查是否有足够的数据进行30天历史检查
-	if stockSessionLen < globalConfig.STOCK_SESSION_LEN + 30 {
+	if stockSessionLen < globalDefine.STOCK_SESSION_LEN+30 {
 		logger.Infof("stock %s session len is %d, not enough for 30-day historical check", stockCode, stockSessionLen)
 		return false, ""
 	}
@@ -157,7 +157,7 @@ func HighPointStrategyLast(stockCode string) (isHighPoint bool, dataStr string) 
 	}
 
 	// 计算当前的会话开始索引
-	currentSessionStartIndex := stockSessionLen - globalConfig.STOCK_SESSION_LEN
+	currentSessionStartIndex := stockSessionLen - globalDefine.STOCK_SESSION_LEN
 	if currentSessionStartIndex < 0 {
 		currentSessionStartIndex = 0
 	}
@@ -175,7 +175,7 @@ func HighPointStrategyLast(stockCode string) (isHighPoint bool, dataStr string) 
 	// 从倒数第2天开始检查，向前检查30天
 	for dayOffset := 1; dayOffset <= 30; dayOffset++ {
 		checkDayIndex := stockSessionLen - 1 - dayOffset
-		if checkDayIndex < globalConfig.STOCK_SESSION_LEN - 1 {
+		if checkDayIndex < globalDefine.STOCK_SESSION_LEN-1 {
 			break // 没有足够的历史数据
 		}
 
@@ -185,7 +185,7 @@ func HighPointStrategyLast(stockCode string) (isHighPoint bool, dataStr string) 
 		}
 
 		// 计算这一天对应的会话开始索引
-		checkSessionStartIndex := checkDayIndex + 1 - globalConfig.STOCK_SESSION_LEN
+		checkSessionStartIndex := checkDayIndex + 1 - globalDefine.STOCK_SESSION_LEN
 		if checkSessionStartIndex < 0 {
 			checkSessionStartIndex = 0
 		}
@@ -202,7 +202,7 @@ func HighPointStrategyLast(stockCode string) (isHighPoint bool, dataStr string) 
 
 		if isMaxInSession {
 			// 过去30天内有一天满足了最大值条件，不满足首次满足的要求
-			logger.Infof("HighPointStrategyLast stockCode:%s, past day %s already satisfied max condition", 
+			logger.Infof("HighPointStrategyLast stockCode:%s, past day %s already satisfied max condition",
 				stockCode, checkDayData.DataStr)
 			return false, ""
 		}
@@ -215,7 +215,7 @@ func HighPointStrategyLast(stockCode string) (isHighPoint bool, dataStr string) 
 		beginDataStr = sessionStartData.DataStr
 	}
 
-	logger.Infof("HighPointStrategyLast stockCode:%s, DateStr:%s, PriceA:%.2f, is first time max in session in 30 days, sessionBeginDate:%s", 
+	logger.Infof("HighPointStrategyLast stockCode:%s, DateStr:%s, PriceA:%.2f, is first time max in session in 30 days, sessionBeginDate:%s",
 		stockCode, lastDayData.DataStr, lastDayData.PriceA, beginDataStr)
 
 	return true, lastDayData.DataStr

@@ -1,6 +1,6 @@
 package stockStrategy
 
-import tradeTest "stock/tradeTest"
+import globalDefine "stock/globalDefine"
 
 // // Wallet 钱包状态
 // type Wallet struct {
@@ -21,5 +21,5 @@ type StockStrategy interface {
 
 	//判断是否符合卖出条件
 	//只传入当前价格，防止访问未来数据
-	DealStrategySell(price float32, dataIndex int, wallet *tradeTest.Wallet) (sell bool)
+	DealStrategySell(price float32, dataIndex int, wallet *globalDefine.Wallet) (sell bool)
 }

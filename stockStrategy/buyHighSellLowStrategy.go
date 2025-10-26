@@ -2,6 +2,7 @@ package stockStrategy
 
 import (
 	"fmt"
+	globaldefine "stock/globalDefine"
 	"stock/stockData"
 )
 
@@ -75,9 +76,15 @@ func (strategy *BuyHighSellLowStrategy) DealStrategy(code string) (operates map[
 	// 重置历史价格队列
 	strategy.historyPrices = make([]float32, 0)
 
-	// 初始化钱包状态为空仓
-	wallet := &Wallet{
-		Status: 2, // 2-空仓
+	// 初始化持仓状态为空仓
+	position := globaldefine.Position{
+		StockCode: code,
+		StockName: stock.Name,
+		StockNum:  0,
+		Profit:    0,
+		BuyPrice:  0,
+		SellPrice: 0,
+		BuyDate:   "",
 	}
 
 	// 遍历所有数据，模拟实时接收价格
@@ -96,15 +103,15 @@ func (strategy *BuyHighSellLowStrategy) DealStrategy(code string) (operates map[
 			continue
 		}
 
-		if wallet.Status == 2 { // 空仓状态，判断是否买入
+		if position.Status == 2 { // 空仓状态，判断是否买入
 			shouldBuy := strategy.DealStrategyBuy(currentPrice, i)
 
 			if shouldBuy {
 				// 记录买入信息
-				wallet.Status = 1 // 1-持仓
-				wallet.BuyPrice = currentPrice
-				wallet.BuyDate = dayDatas[i].DataStr
-				wallet.BuyIndex = i
+				position.Status = 1 // 1-持仓
+				position.BuyPrice = currentPrice
+				position.BuyDate = dayDatas[i].DataStr
+				position.BuyIndex = i
 
 				// 创建买入操作记录
 				buyOperate := Operate{
@@ -127,8 +134,8 @@ func (strategy *BuyHighSellLowStrategy) DealStrategy(code string) (operates map[
 				}
 			}
 
-		} else if wallet.Status == 1 { // 持仓状态，判断是否卖出
-			shouldSell := strategy.DealStrategySell(currentPrice, i, wallet)
+		} else if position.Status == 1 { // 持仓状态，判断是否卖出
+			shouldSell := strategy.DealStrategySell(currentPrice, i, &position)
 
 			if shouldSell {
 				// 创建卖出操作记录
@@ -141,19 +148,19 @@ func (strategy *BuyHighSellLowStrategy) DealStrategy(code string) (operates map[
 				}
 
 				// 更新操作记录
-				recordKey := fmt.Sprintf("%s_%d", code, wallet.BuyIndex)
+				recordKey := fmt.Sprintf("%s_%d", code, position.BuyIndex)
 				if record, exists := operates[recordKey]; exists {
 					record.SellOperate = sellOperate
 					record.Status = 2 // 2-已卖出
-					record.Profit = float64(currentPrice-wallet.BuyPrice) * record.StockNum
+					record.Profit = float64(currentPrice-position.BuyPrice) * record.StockNum
 					operates[recordKey] = record
 				}
 
 				// 重置钱包状态为空仓
-				wallet.Status = 2
-				wallet.BuyPrice = 0
-				wallet.BuyDate = ""
-				wallet.BuyIndex = 0
+				position.Status = 2
+				position.BuyPrice = 0
+				position.BuyDate = ""
+				position.BuyIndex = 0
 			}
 		}
 	}
@@ -192,20 +199,20 @@ func (strategy *BuyHighSellLowStrategy) DealStrategyBuy(price float32, dateIndex
 }
 
 // DealStrategySell 判断是否符合卖出条件
-func (strategy *BuyHighSellLowStrategy) DealStrategySell(price float32, dataIndex int, wallet *Wallet) (sell bool) {
+func (strategy *BuyHighSellLowStrategy) DealStrategySell(price float32, dataIndex int, position *globaldefine.Position) (sell bool) {
 	/*卖出条件：
 	1、距离买入价下跌超过6%则卖出（止损）
 	2、买入超过15天，则卖出
 	*/
 
 	// 条件1：止损 - 距离买入价下跌超过设定百分比
-	dropPercent := (wallet.BuyPrice - price) / wallet.BuyPrice
+	dropPercent := (position.BuyPrice - price) / position.BuyPrice
 	if dropPercent >= float32(strategy.SellDropPercent) {
 		return true
 	}
 
 	// 条件2：持有时间达到最大持有天数
-	holdDays := dataIndex - wallet.BuyIndex
+	holdDays := dataIndex - position.BuyIndex
 	if holdDays >= strategy.MaxHoldDays {
 		return true
 	}
