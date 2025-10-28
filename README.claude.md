@@ -68,7 +68,7 @@ Stock-Go是一个专业的票票数据分析和可视化系统，旨在为票票
 
 ### 核心模块
 
-#### 🔧 globalConfig
+#### 🔧 globalDefine
 全局配置管理模块，负责系统参数配置和跨平台路径管理：
 - **配置常量**：STOCK_SESSION_LEN(500), STOCK_SESSION_HIGHTPOINT_LEN(15)
 - **跨平台支持**：自动识别Linux/macOS/Windows系统
@@ -122,9 +122,9 @@ stock-go/
 ├── Data/                    # 数据文件目录
 │   ├── getAllStockDatas.py  # 获取所有票票数据脚本
 │   ├── updateDayDatas.py    # 更新日数据脚本
-│   └── stockList.csv        # 票票列表
-├── globalConfig/            # 全局配置
-│   └── globalConfig.go
+│   └── stockList.csv        # 股票列表
+├── globalDefine/            # 全局配置
+│   └── globalDefine.go
 ├── http/                    # HTTP服务
 │   ├── server.go           # HTTP服务器
 │   ├── stockHandler.go     # 票票处理器
@@ -275,7 +275,7 @@ curl http://localhost:8080/readDayDate
 
 ### 系统配置参数
 
-核心配置位于 `globalConfig/globalConfig.go`:
+核心配置位于 `globalDefine/globalDefine.go`:
 
 ```go
 // 票票分析会话长度（天数）

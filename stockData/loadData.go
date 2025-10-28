@@ -4,7 +4,7 @@ import (
 	"encoding/csv"
 	"log/slog"
 	"os"
-	"stock/globalConfig"
+	globalDefine "stock/globalDefine"
 	"stock/logger"
 	"strconv"
 	"strings"
@@ -27,7 +27,7 @@ import (
 
 // 加载stock列表
 func LoadAllStockList() [][]string {
-	fileName := globalConfig.DATA_PATH + "stockList.csv"
+	fileName := globalDefine.DATA_PATH + "stockList.csv"
 	fs1, _ := os.Open(fileName)
 	r1 := csv.NewReader(fs1)
 	content, err := r1.ReadAll()
@@ -56,7 +56,7 @@ func LoadAllStockList() [][]string {
 
 // 加载stock列表
 func LoadPreStockList() map[string]string {
-	fileName := globalConfig.DATA_PATH + "stockList.csv"
+	fileName := globalDefine.DATA_PATH + "stockList.csv"
 	fs1, _ := os.Open(fileName)
 	r1 := csv.NewReader(fs1)
 	content, err := r1.ReadAll()
@@ -66,7 +66,7 @@ func LoadPreStockList() map[string]string {
 
 	for index, row := range content {
 		//调试阶段，只取30分之一 个数据
-		if index%globalConfig.STOCK_DATA_LOAD_PCT == globalConfig.STOCK_DATA_LOAD_MOD {
+		if index%globalDefine.STOCK_DATA_LOAD_PCT == globalDefine.STOCK_DATA_LOAD_MOD {
 			//continue
 			//}
 			//if index != 0 {
@@ -89,7 +89,7 @@ func LoadPreStockList() map[string]string {
 }
 
 func LoadFromCsv(code string) (stockData StockData) {
-	fileName := globalConfig.DATA_PATH + code + "_ALL.csv"
+	fileName := globalDefine.DATA_PATH + code + "_ALL.csv"
 	fs1, _ := os.Open(fileName)
 	r1 := csv.NewReader(fs1)
 	content, err := r1.ReadAll()

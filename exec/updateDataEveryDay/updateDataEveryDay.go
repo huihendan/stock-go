@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"path/filepath"
-	"stock/globalConfig"
+	globalDefine "stock/globalDefine"
 	"stock/logger"
 	"stock/utils"
 
@@ -16,7 +16,7 @@ import (
 
 func main() {
 
-	executeTime := globalConfig.ExecuteUpdataDataTime
+	executeTime := globalDefine.ExecuteUpdataDataTime
 	utils.DoWorkEveryDayOnce(doworkEveryDay, &executeTime)
 
 	// 等待中断信号
@@ -38,13 +38,13 @@ func updateStockData() error {
 	defer logger.Infof("数据更新任务完成 - %s", time.Now().Format("2006-01-02 15:04:05"))
 
 	// 检查 DATA_PATH 是否存在
-	if _, err := os.Stat(globalConfig.DATA_PATH); os.IsNotExist(err) {
-		logger.Errorf("数据目录不存在: %s", globalConfig.DATA_PATH)
-		return fmt.Errorf("数据目录不存在: %s", globalConfig.DATA_PATH)
+	if _, err := os.Stat(globalDefine.DATA_PATH); os.IsNotExist(err) {
+		logger.Errorf("数据目录不存在: %s", globalDefine.DATA_PATH)
+		return fmt.Errorf("数据目录不存在: %s", globalDefine.DATA_PATH)
 	}
 
 	// 构建 Python 脚本的完整路径
-	scriptPath := filepath.Join(globalConfig.DATA_PATH, "updateDayDatas.py")
+	scriptPath := filepath.Join(globalDefine.DATA_PATH, "updateDayDatas.py")
 
 	// 检查脚本文件是否存在
 	if _, err := os.Stat(scriptPath); os.IsNotExist(err) {
@@ -60,7 +60,7 @@ func updateStockData() error {
 	}
 
 	cmd := exec.Command(pythonPath, scriptPath)
-	cmd.Dir = globalConfig.DATA_PATH // 设置工作目录
+	cmd.Dir = globalDefine.DATA_PATH // 设置工作目录
 
 	// 捕获输出
 	output, err := cmd.CombinedOutput()

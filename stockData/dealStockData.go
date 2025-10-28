@@ -2,7 +2,7 @@ package stockData
 
 import (
 	"sort"
-	"stock/globalConfig"
+	globalDefine "stock/globalDefine"
 	"stock/logger"
 )
 
@@ -113,8 +113,8 @@ func (stock *StockInfo) DealSessionHighPointDayByDay2() (highPoint bool) {
 
 	highPoint = false
 	stockSessionLen := len(stock.Datas.DayDatas)
-	if stockSessionLen < globalConfig.STOCK_SESSION_LEN {
-		logger.Infof("stock %s session len is %d < %d", stock.Code, stockSessionLen, globalConfig.STOCK_SESSION_LEN)
+	if stockSessionLen < globalDefine.STOCK_SESSION_LEN {
+		logger.Infof("stock %s session len is %d < %d", stock.Code, stockSessionLen, globalDefine.STOCK_SESSION_LEN)
 		return
 	}
 
@@ -132,11 +132,11 @@ func (stock *StockInfo) DealSessionHighPointDayByDay2() (highPoint bool) {
 	}
 
 	// 从第 STOCK_SESSION_LEN 天开始遍历
-	for i := globalConfig.STOCK_SESSION_LEN; i < stockSessionLen; i++ {
+	for i := globalDefine.STOCK_SESSION_LEN; i < stockSessionLen; i++ {
 		currentDay := stock.Datas.DayDatas[i]
 
 		// 移除队列中已经超出滑动窗口范围的索引
-		for len(queue) > 0 && queue[0] <= i-globalConfig.STOCK_SESSION_LEN {
+		for len(queue) > 0 && queue[0] <= i-globalDefine.STOCK_SESSION_LEN {
 			queue = queue[1:]
 		}
 
@@ -167,18 +167,18 @@ func (stock *StockInfo) DealSessionHighPointDayByDay() (highPoint bool) {
 
 	highPoint = false
 	stockSessionLen := len(stock.Datas.DayDatas)
-	if stockSessionLen < globalConfig.STOCK_SESSION_LEN {
-		logger.Infof("stock %s session len is %d < %d", stock.Code, stockSessionLen, globalConfig.STOCK_SESSION_LEN)
+	if stockSessionLen < globalDefine.STOCK_SESSION_LEN {
+		logger.Infof("stock %s session len is %d < %d", stock.Code, stockSessionLen, globalDefine.STOCK_SESSION_LEN)
 		return
 	}
 
 	// 从第 STOCK_SESSION_LEN 天开始遍历
-	for i := globalConfig.STOCK_SESSION_LEN; i < stockSessionLen; i++ {
+	for i := globalDefine.STOCK_SESSION_LEN; i < stockSessionLen; i++ {
 		currentDay := stock.Datas.DayDatas[i]
 
 		// 检查当前天是否是前 STOCK_SESSION_LEN 天内的最大值
 		isMaxInSession := true
-		sessionStartIndex := i - globalConfig.STOCK_SESSION_LEN
+		sessionStartIndex := i - globalDefine.STOCK_SESSION_LEN
 
 		// 遍历前 STOCK_SESSION_LEN 天的数据，与当前天进行比较
 		for j := sessionStartIndex; j < i; j++ {

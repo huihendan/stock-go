@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
-	"stock/globalConfig"
+	globalDefine "stock/globalDefine"
 	"strconv"
 	"strings"
 	"sync"
@@ -265,7 +265,7 @@ func Init() {
 		// 构建日志文件名
 		logFileName := fmt.Sprintf("stock_%d_%s.log", processPID, startTime)
 
-		logFile, err := os.OpenFile(globalConfig.LOG_PATH+logFileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		logFile, err := os.OpenFile(globalDefine.LOG_PATH+logFileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 		if err != nil {
 			fmt.Printf("无法打开日志文件: %v\n", err)
 			return

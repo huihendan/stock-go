@@ -4,7 +4,7 @@ import (
 	"io"
 	"log/slog"
 	"os"
-	"stock/globalConfig"
+	globalDefine "stock/globalDefine"
 	. "stock/stockData"
 
 	"github.com/go-echarts/go-echarts/v2/charts"
@@ -267,7 +267,7 @@ func PaintStockKline(code string) {
 
 	page.AddCharts(kline)
 
-	f, err := os.Create(globalConfig.LOG_PATH + stock.Code + ".html")
+	f, err := os.Create(globalDefine.LOG_PATH + stock.Code + ".html")
 	if err != nil {
 		panic(err)
 	}

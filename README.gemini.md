@@ -24,7 +24,7 @@
 ├── exec/                  # 独立的、可每日执行的 Go 程序
 │   ├── analyseDataEveryDay/ # 每日分析任务
 │   └── updateDataEveryDay/  # 每日数据更新任务
-├── globalConfig/          # 全局配置文件
+├── globalDefine/          # 全局配置文件
 ├── http/                  # HTTP 服务器相关代码
 │   ├── server.go            # 服务器启动与路由
 │   └── stockHandler.go      # 票票相关的 HTTP Handler
@@ -90,7 +90,7 @@ python Data/updateDayDatas.py
 
 ### 4. 配置
 
-修改 `globalConfig/globalConfig.go` 文件，根据需要配置数据库连接、文件路径、微信推送的 `token` 等信息。
+修改 `globalDefine/globalDefine.go` 文件，根据需要配置数据库连接、文件路径、微信推送的 `token` 等信息。
 
 ## 如何运行
 
