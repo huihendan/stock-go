@@ -3,12 +3,14 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"os/signal"
 	"stock/globalConfig"
 	"stock/logger"
 	"stock/stockData"
 	"stock/stockStrategy"
 	"stock/utils"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -79,7 +81,9 @@ func analyseData() error {
 		message += fmt.Sprintf("%s\n", stock)
 	}
 	if message != "" {
-		finalMessage := fmt.Sprintf("发现高点:\n %s", message)
+		// 获取公网IP
+		publicIP := getPublicIP()
+		finalMessage := fmt.Sprintf("公网IP: %s\n发现高点:\n %s", publicIP, message)
 		logger.Infof("发送微信消息长度: %d 字节", len(finalMessage))
 		logger.Infof("完整消息内容: %s", finalMessage)
 		utils.SendWeChatMessage(finalMessage)
@@ -88,4 +92,14 @@ func analyseData() error {
 	logger.Infof("analyseData end - 成功处理 %d 只stock", successCount)
 
 	return lastErr
+}
+
+func getPublicIP() string {
+	cmd := exec.Command("curl", "ifconfig.me")
+	output, err := cmd.Output()
+	if err != nil {
+		logger.Warnf("获取公网IP失败: %v", err)
+		return "未知"
+	}
+	return strings.TrimSpace(string(output))
 }
