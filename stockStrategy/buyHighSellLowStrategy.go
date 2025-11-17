@@ -135,7 +135,9 @@ func (strategy *BuyHighSellLowStrategy) DealStrategy(code string) (operates map[
 			}
 
 		} else if position.Status == 1 { // 持仓状态，判断是否卖出
-			shouldSell := strategy.DealStrategySell(currentPrice, i, &position)
+			// TODO: 调用需要传入wallet，暂时注释
+			// shouldSell := strategy.DealStrategySell(currentPrice, i, &position)
+			shouldSell := false
 
 			if shouldSell {
 				// 创建卖出操作记录
@@ -199,23 +201,7 @@ func (strategy *BuyHighSellLowStrategy) DealStrategyBuy(price float32, dateIndex
 }
 
 // DealStrategySell 判断是否符合卖出条件
-func (strategy *BuyHighSellLowStrategy) DealStrategySell(price float32, dataIndex int, position *globaldefine.Position) (sell bool) {
-	/*卖出条件：
-	1、距离买入价下跌超过6%则卖出（止损）
-	2、买入超过15天，则卖出
-	*/
-
-	// 条件1：止损 - 距离买入价下跌超过设定百分比
-	dropPercent := (position.BuyPrice - price) / position.BuyPrice
-	if dropPercent >= float32(strategy.SellDropPercent) {
-		return true
-	}
-
-	// 条件2：持有时间达到最大持有天数
-	holdDays := dataIndex - position.BuyIndex
-	if holdDays >= strategy.MaxHoldDays {
-		return true
-	}
-
+func (strategy *BuyHighSellLowStrategy) DealStrategySell(price float32, dataIndex int, wallet *globaldefine.Wallet) (sell bool) {
+	// TODO: 空实现，待后续补充
 	return false
 }

@@ -95,7 +95,7 @@ func analyseData() error {
 }
 
 func getPublicIP() string {
-	cmd := exec.Command("curl", "ifconfig.me")
+	cmd := exec.Command("curl", "-4", "ifconfig.me")
 	output, err := cmd.Output()
 	if err != nil {
 		logger.Warnf("获取公网IP失败: %v", err)
