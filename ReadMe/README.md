@@ -122,7 +122,7 @@ stock-go/
 ├── Data/                    # 数据文件目录
 │   ├── getAllStockDatas.py  # 获取所有票票数据脚本
 │   ├── updateDayDatas.py    # 更新日数据脚本
-│   └── stockList.csv        # 股票列表
+│   └── stockList.csv        # 票票列表
 ├── globalDefine/            # 全局配置
 │   └── globalDefine.go
 ├── http/                    # HTTP服务
