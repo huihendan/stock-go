@@ -3,7 +3,7 @@ package tradeTest
 import (
 	"fmt"
 	"sort"
-	"stock-go/globalDefine"
+	globalDefine "stock-go/globalDefine"
 	"stock-go/stockData"
 	"stock-go/stockStrategy"
 )

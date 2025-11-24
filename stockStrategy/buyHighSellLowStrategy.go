@@ -2,8 +2,8 @@ package stockStrategy
 
 import (
 	"fmt"
-	globaldefine "stock/globalDefine"
-	"stock/stockData"
+	globaldefine "stock-go/globalDefine"
+	"stock-go/stockData"
 )
 
 // BuyHighSellLowStrategy 追涨杀跌策略1

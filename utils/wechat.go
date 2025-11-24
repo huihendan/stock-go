@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"log/slog"
 	"net/http"
-	"stock/logger"
+	"stock-go/logger"
 	"strings"
 	"time"
 )

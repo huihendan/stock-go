@@ -1,6 +1,6 @@
 package stockStrategy
 
-import globalDefine "stock/globalDefine"
+import globalDefine "stock-go/globalDefine"
 
 // // Wallet 钱包状态
 // type Wallet struct {

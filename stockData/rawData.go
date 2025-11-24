@@ -1,8 +1,8 @@
 package stockData
 
 import (
-	"stock/logger"
-	"stock/utils"
+	"stock-go/logger"
+	"stock-go/utils"
 	"time"
 )
 

@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
-	globalDefine "stock/globalDefine"
+	globalDefine "stock-go/globalDefine"
 	"strconv"
 	"strings"
 	"sync"

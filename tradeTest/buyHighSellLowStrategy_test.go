@@ -2,8 +2,8 @@ package tradeTest
 
 import (
 	"fmt"
-	"stock/logger"
-	"stock/stockStrategy"
+	"stock-go/logger"
+	"stock-go/stockStrategy"
 	"strings"
 	"testing"
 )

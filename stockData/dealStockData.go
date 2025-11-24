@@ -2,8 +2,8 @@ package stockData
 
 import (
 	"sort"
-	globalDefine "stock/globalDefine"
-	"stock/logger"
+	globalDefine "stock-go/globalDefine"
+	"stock-go/logger"
 )
 
 func (stock *StockInfo) DealPointsLen(len int) {

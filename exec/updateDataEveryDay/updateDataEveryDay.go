@@ -6,9 +6,9 @@ import (
 	"os/exec"
 	"os/signal"
 	"path/filepath"
-	globalDefine "stock/globalDefine"
-	"stock/logger"
-	"stock/utils"
+	globalDefine "stock-go/globalDefine"
+	"stock-go/logger"
+	"stock-go/utils"
 
 	"syscall"
 	"time"

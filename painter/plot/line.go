@@ -1,9 +1,9 @@
 package plot
 
 import (
-	globalDefine "stock/globalDefine"
-	"stock/logger"
-	"stock/stockData"
+	globalDefine "stock-go/globalDefine"
+	"stock-go/logger"
+	"stock-go/stockData"
 
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
