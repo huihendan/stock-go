@@ -1,10 +1,10 @@
 package stockStrategy
 
 import (
-	globalDefine "stock/globalDefine"
-	"stock/logger"
-	"stock/painter"
-	"stock/stockData"
+	globalDefine "stock-go/globalDefine"
+	"stock-go/logger"
+	"stock-go/painter"
+	"stock-go/stockData"
 )
 
 func HighPointStrategy(stockCode string) (isHighPoint bool, dataStr string) {

@@ -3,8 +3,8 @@ package tradeTest
 import (
 	"fmt"
 	"sort"
-	globaldefine "stock/globalDefine"
-	"stock/stockStrategy"
+	globaldefine "stock-go/globalDefine"
+	"stock-go/stockStrategy"
 )
 
 const (
@@ -29,36 +29,36 @@ func TradeTest(code string, strategyMode int, wallet globaldefine.Wallet) (globa
 	for _, key := range sortedKeys {
 		strategy := strategies[key]
 
-		requiredCash := strategy.BuyOperate.BuyPrice * float64(strategy.BuyOperate.StockNum)
+		requiredCash := float32(strategy.BuyOperate.BuyPrice) * float32(strategy.BuyOperate.StockNum)
 
 		if wallet.Cash >= requiredCash {
 			wallet.Cash -= requiredCash
 
-			position := Position{
+			position := globaldefine.Position{
 				StockCode: strategy.StockCode,
 				StockName: strategy.StockName,
-				StockNum:  strategy.BuyOperate.StockNum,
-				BuyPrice:  strategy.BuyOperate.BuyPrice,
-				SellPrice: strategy.SellOperate.SellPrice,
+				StockNum:  int(strategy.BuyOperate.StockNum),
+				BuyPrice:  float32(strategy.BuyOperate.BuyPrice),
+				SellPrice: float32(strategy.SellOperate.SellPrice),
 				BuyDate:   strategy.BuyOperate.OperateDate,
-				Profit:    strategy.Profit,
+				Profit:    float32(strategy.Profit),
 			}
 
 			wallet.Positions = append(wallet.Positions, position)
 
 			if strategy.Status == Status_Sold {
-				sellAmount := strategy.SellOperate.SellPrice * float64(strategy.SellOperate.StockNum)
+				sellAmount := float32(strategy.SellOperate.SellPrice) * float32(strategy.SellOperate.StockNum)
 				wallet.Cash += sellAmount
 			}
 
-			operateRecord := OperateRecord{
+			operateRecord := globaldefine.OperateRecord{
 				StockCode:   strategy.StockCode,
 				StockName:   strategy.StockName,
-				StockNum:    strategy.StockNum,
+				StockNum:    int(strategy.StockNum),
 				BuyOperate:  convertToTradeTestOperate(strategy.BuyOperate),
 				SellOperate: convertToTradeTestOperate(strategy.SellOperate),
 				Status:      strategy.Status,
-				Profit:      strategy.Profit,
+				Profit:      float32(strategy.Profit),
 				OperateDate: strategy.OperateDate,
 				OperateTime: strategy.OperateTime,
 			}
@@ -70,13 +70,13 @@ func TradeTest(code string, strategyMode int, wallet globaldefine.Wallet) (globa
 	return wallet, operateRecords
 }
 
-func BatchTradeTest(codes []string, strategyMode int, initialCash float64) (Wallet, map[string][]OperateRecord) {
-	wallet := Wallet{
-		Cash:      initialCash,
-		Positions: []Position{},
+func BatchTradeTest(codes []string, strategyMode int, initialCash float64) (globaldefine.Wallet, map[string][]globaldefine.OperateRecord) {
+	wallet := globaldefine.Wallet{
+		Cash:      float32(initialCash),
+		Positions: []globaldefine.Position{},
 	}
 
-	allOperateRecords := make(map[string][]OperateRecord)
+	allOperateRecords := make(map[string][]globaldefine.OperateRecord)
 
 	for _, code := range codes {
 		fmt.Printf("Testing strategy %d for stock %s\n", strategyMode, code)
@@ -92,7 +92,7 @@ func BatchTradeTest(codes []string, strategyMode int, initialCash float64) (Wall
 	return wallet, allOperateRecords
 }
 
-func CalculatePortfolioPerformance(wallet Wallet, operateRecords map[string][]OperateRecord) PortfolioStats {
+func CalculatePortfolioPerformance(wallet globaldefine.Wallet, operateRecords map[string][]globaldefine.OperateRecord) PortfolioStats {
 	totalTrades := 0
 	totalProfit := 0.0
 	winningTrades := 0
@@ -100,7 +100,7 @@ func CalculatePortfolioPerformance(wallet Wallet, operateRecords map[string][]Op
 	for _, records := range operateRecords {
 		for _, record := range records {
 			totalTrades++
-			totalProfit += record.Profit
+			totalProfit += float64(record.Profit)
 
 			if record.Profit > 0 {
 				winningTrades++
@@ -108,9 +108,9 @@ func CalculatePortfolioPerformance(wallet Wallet, operateRecords map[string][]Op
 		}
 	}
 
-	currentValue := wallet.Cash
+	currentValue := float64(wallet.Cash)
 	for _, position := range wallet.Positions {
-		currentValue += position.SellPrice * float64(position.StockNum)
+		currentValue += float64(position.SellPrice) * float64(position.StockNum)
 	}
 
 	winRate := 0.0
@@ -124,7 +124,7 @@ func CalculatePortfolioPerformance(wallet Wallet, operateRecords map[string][]Op
 		TotalProfit:    totalProfit,
 		WinRate:        winRate,
 		CurrentValue:   currentValue,
-		CashRemaining:  wallet.Cash,
+		CashRemaining:  float64(wallet.Cash),
 		PositionsCount: len(wallet.Positions),
 	}
 }
@@ -139,11 +139,11 @@ type PortfolioStats struct {
 	PositionsCount int
 }
 
-func convertToTradeTestOperate(strategyOperate stockStrategy.Operate) Operate {
-	return Operate{
+func convertToTradeTestOperate(strategyOperate stockStrategy.Operate) globaldefine.Operate {
+	return globaldefine.Operate{
 		OperateType: strategyOperate.OperateType,
-		BuyPrice:    strategyOperate.BuyPrice,
-		SellPrice:   strategyOperate.SellPrice,
+		BuyPrice:    float32(strategyOperate.BuyPrice),
+		SellPrice:   float32(strategyOperate.SellPrice),
 		OperateDate: strategyOperate.OperateDate,
 		OperateTime: strategyOperate.OperateTime,
 		StockCode:   strategyOperate.StockCode,
@@ -152,7 +152,7 @@ func convertToTradeTestOperate(strategyOperate stockStrategy.Operate) Operate {
 	}
 }
 
-func PrintTradeResults(wallet Wallet, operateRecords map[string][]OperateRecord) {
+func PrintTradeResults(wallet globaldefine.Wallet, operateRecords map[string][]globaldefine.OperateRecord) {
 	fmt.Println("=== Trade Test Results ===")
 
 	stats := CalculatePortfolioPerformance(wallet, operateRecords)

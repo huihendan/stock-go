@@ -2,7 +2,7 @@ package utils
 
 import (
 	"fmt"
-	"stock/logger"
+	"stock-go/logger"
 )
 
 // ExampleDoWorkEveryDayOnce 展示如何使用 DoWorkEveryDayOnce 函数

@@ -1,4 +1,4 @@
-module stock
+module stock-go
 
 go 1.22.9
 

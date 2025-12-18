@@ -3,7 +3,7 @@ package gnuplot
 import (
 	"fmt"
 	gnuplot "github.com/sbinet/go-gnuplot"
-	"stock/utils"
+	"stock-go/utils"
 	"testing"
 	"time"
 )

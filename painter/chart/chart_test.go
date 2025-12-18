@@ -2,8 +2,8 @@ package chart
 
 import (
 	"fmt"
-	"stock/stockData"
-	"stock/utils"
+	"stock-go/stockData"
+	"stock-go/utils"
 
 	"github.com/wcharczuk/go-chart/v2"
 

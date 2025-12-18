@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"stock/stockStrategy"
-	"stock/tradeTest"
+	"stock-go/stockStrategy"
+	"stock-go/tradeTest"
 )
 
 func main() {

@@ -3,7 +3,7 @@ package utils
 import (
 	"fmt"
 	"log/slog"
-	"stock/logger"
+	"stock-go/logger"
 	"time"
 )
 

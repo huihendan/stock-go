@@ -4,8 +4,8 @@ import (
 	"encoding/csv"
 	"log/slog"
 	"os"
-	globalDefine "stock/globalDefine"
-	"stock/logger"
+	globalDefine "stock-go/globalDefine"
+	"stock-go/logger"
 	"strconv"
 	"strings"
 )

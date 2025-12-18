@@ -2,15 +2,15 @@ package main
 
 // 使用特殊注释防止导入被重新排序
 import (
-	_ "stock/logger" // 确保logger最先初始化
+	_ "stock-go/logger" // 确保logger最先初始化
 
 	"fmt"
 	"os"
 	"os/signal"
-	"stock/http"
-	"stock/logger"
-	"stock/painter"
-	"stock/stockData"
+	"stock-go/http"
+	"stock-go/logger"
+	"stock-go/painter"
+	"stock-go/stockData"
 	"syscall"
 	"time"
 )

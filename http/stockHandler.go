@@ -6,7 +6,7 @@ import (
 	"log"
 	"log/slog"
 	"net/http"
-	"stock/stockData"
+	"stock-go/stockData"
 )
 
 type stockParam struct {
