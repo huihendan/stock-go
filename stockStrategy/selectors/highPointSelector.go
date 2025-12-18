@@ -6,7 +6,7 @@ import (
 )
 
 // HighPointSelector 高点选股器
-// 选择在指定回看期内，最近N天出现过最高点的股票
+// 选择在指定回看期内，最近N天出现过最高点的票票
 type HighPointSelector struct {
 	LookbackDays int // 回看天数，默认500
 	RecentDays   int // 最近N天内出现高点，默认15
@@ -20,42 +20,44 @@ func NewHighPointSelector(lookbackDays, recentDays int) *HighPointSelector {
 	}
 }
 
-// SelectStocks 选择符合高点条件的股票
+// SelectStocks 不做任何筛选，返回所有票票列表
+// 已废弃，请使用 SelectStocksAtDate
 func (s *HighPointSelector) SelectStocks(allCodes []string) []string {
-	var selected []string
-
-	for _, code := range allCodes {
-		stockInfo := stockData.GetStockRawBycode(code)
-		if stockInfo == nil {
-			continue
-		}
-
-		// 检查最近是否出现高点
-		if s.isRecentHighPoint(stockInfo) {
-			selected = append(selected, code)
-		}
-	}
-
-	return selected
+	return allCodes
 }
 
-// isRecentHighPoint 检查股票是否在最近RecentDays天内出现了LookbackDays的最高点
-func (s *HighPointSelector) isRecentHighPoint(stock *stockData.StockInfo) bool {
+// SelectStocksAtDate 不做任何筛选，返回所有票票列表（避免未来数据）
+func (s *HighPointSelector) SelectStocksAtDate(allCodes []string, endIndex int) []string {
+	// 不做筛选，直接返回所有票票
+	return allCodes
+}
+
+// isRecentHighPointAtDate 检查票票在指定时间点是否满足高点条件
+// endIndex: 数据截止索引（包含），只使用 [0, endIndex] 的数据
+func (s *HighPointSelector) isRecentHighPointAtDate(stock *stockData.StockInfo, endIndex int) bool {
 	dayDatas := stock.Datas.DayDatas
-	if len(dayDatas) < s.LookbackDays {
+
+	// 数据不足
+	if len(dayDatas) == 0 || endIndex >= len(dayDatas) {
 		return false
 	}
 
-	// 检查最后RecentDays天内是否有新高点
-	startIndex := len(dayDatas) - s.LookbackDays
-	endIndex := len(dayDatas)
-	recentStartIndex := len(dayDatas) - s.RecentDays
+	// 可用的数据长度
+	availableLength := endIndex + 1
+	if availableLength < s.LookbackDays {
+		return false
+	}
+
+	// 计算回看窗口
+	startIndex := availableLength - s.LookbackDays
+	checkEndIndex := availableLength // 不包含
+	recentStartIndex := availableLength - s.RecentDays
 
 	var maxPrice float32 = 0
 	var maxIndex int = -1
 
 	// 找出回看窗口内的最高价格及其索引
-	for i := startIndex; i < endIndex; i++ {
+	for i := startIndex; i < checkEndIndex; i++ {
 		if dayDatas[i].PriceA > maxPrice {
 			maxPrice = dayDatas[i].PriceA
 			maxIndex = i

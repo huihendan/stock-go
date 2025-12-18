@@ -28,7 +28,7 @@ func NewBuyHighSellLowSignal(lookbackDays int, sellDropPercent float64, maxHoldD
 	}
 }
 
-// Reset 重置策略状态（每只股票回测前调用）
+// Reset 重置策略状态（每只票票回测前调用）
 func (sg *BuyHighSellLowSignal) Reset() {
 	sg.historyPrices = sg.historyPrices[:0] // 清空历史价格
 }
@@ -57,7 +57,12 @@ func (sg *BuyHighSellLowSignal) ProcessDay(
 		return 0
 	}
 
-	// 4. 判断卖出信号(持仓时)
+	// 4. 更新持仓的最高价
+	if currentPrice > position.HighestPrice {
+		position.HighestPrice = currentPrice
+	}
+
+	// 5. 判断卖出信号(持仓时)
 	if sg.isSellSignal(currentPrice, position) {
 		return -1 // 卖出
 	}
@@ -65,12 +70,20 @@ func (sg *BuyHighSellLowSignal) ProcessDay(
 	return 0
 }
 
-// isBuySignal 买入信号：达到历史最高价
+// isBuySignal 买入信号：前一天达到历史最高价（避免未来函数）
+// 逻辑：判断前一天是否创新高，如果是则次日开盘买入
 func (sg *BuyHighSellLowSignal) isBuySignal(currentPrice float32) bool {
 	historyLen := len(sg.historyPrices)
+
+	// 数据不足（至少需要回看天数的数据）
+	if historyLen < sg.LookbackDays {
+		return false
+	}
+
+	// 计算回看窗口的起始位置
 	startIndex := historyLen - sg.LookbackDays
 
-	// 找出回看窗口内的最高价(不包括当前价格)
+	// 找出回看窗口内的最高价（不包括昨天，即historyLen-1）
 	var highestPrice float32 = 0
 	for i := startIndex; i < historyLen-1; i++ {
 		if sg.historyPrices[i] > highestPrice {
@@ -78,19 +91,34 @@ func (sg *BuyHighSellLowSignal) isBuySignal(currentPrice float32) bool {
 		}
 	}
 
-	// 当前价格达到或超过历史最高价(允许0.5%误差)
-	return currentPrice >= highestPrice*0.995
+	// 判断昨天（historyLen-1）的价格是否达到或超过之前的最高价
+	// 注意：此时 sg.historyPrices 还未包含今天的价格
+	if historyLen > 0 {
+		yesterdayPrice := sg.historyPrices[historyLen-1]
+		// 昨天创新高（允许0.5%误差），则今天开盘买入
+		return yesterdayPrice >= highestPrice*0.995
+	}
+
+	return false
 }
 
 // isSellSignal 卖出信号：止损或超过最大持有天数
 func (sg *BuyHighSellLowSignal) isSellSignal(currentPrice float32, position *stockStrategy.Position) bool {
-	// 条件1: 跌幅止损
+	// 条件1: 相对买入价的跌幅止损
 	dropPercent := float64(position.BuyPrice-currentPrice) / float64(position.BuyPrice)
 	if dropPercent >= sg.SellDropPercent {
 		return true
 	}
 
-	// 条件2: 超过最大持有天数
+	// 条件2: 相对最高价的回撤止损
+	if position.HighestPrice > position.BuyPrice {
+		drawdownPercent := float64(position.HighestPrice-currentPrice) / float64(position.HighestPrice)
+		if drawdownPercent >= sg.SellDropPercent {
+			return true
+		}
+	}
+
+	// 条件3: 超过最大持有天数
 	if position.HoldDays >= sg.MaxHoldDays {
 		return true
 	}

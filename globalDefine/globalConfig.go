@@ -9,7 +9,7 @@ const (
 
 const (
 	STOCK_DATA_LOAD_PCT = 50
-	STOCK_DATA_LOAD_MOD = 2
+	STOCK_DATA_LOAD_MOD = 1
 )
 
 var DATA_PATH = "../Data/"

@@ -84,7 +84,7 @@ func StartRaw() {
 	logger.Info("Raw stock data loading started")
 }
 
-// 从原始数据获取并处理单个股股票数据到 Stocks
+// 从原始数据获取并处理单个票票数据到 Stocks
 func GetProcessedStockFromRaw(code string) *StockInfo {
 	if code == "" {
 		logger.Warnf("票票代码为空")
@@ -127,7 +127,7 @@ func GetProcessedStockFromRaw(code string) *StockInfo {
 	return stock
 }
 
-// 从原始数据批量处理所股股票数据到 Stocks
+// 从原始数据批量处理所有票票数据到 Stocks
 func ProcessAllStocksFromRaw() {
 	start1 := time.Now()
 	defer utils.CostTime(start1)

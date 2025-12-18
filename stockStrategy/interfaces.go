@@ -5,22 +5,30 @@ import (
 )
 
 // ===== 选股器接口 =====
-// StockSelector 负责从全市场筛选出符合条件的股票代码列表
+// StockSelector 负责从全市场筛选出符合条件的票票代码列表
 type StockSelector interface {
-	// SelectStocks 选择股票代码列表
-	// 参数: allCodes - 全市场股票代码
+	// SelectStocks 选择票票代码列表（使用全部历史数据，已废弃）
+	// 参数: allCodes - 全市场票票代码
 	// 返回: 筛选后的代码列表
+	// 警告: 此方法会导致未来数据泄漏，请使用 SelectStocksAtDate
 	SelectStocks(allCodes []string) []string
+
+	// SelectStocksAtDate 在指定时间点选择票票（避免未来数据）
+	// 参数:
+	//   - allCodes: 全市场票票代码
+	//   - endIndex: 数据截止索引（只使用 [0, endIndex] 范围内的数据）
+	// 返回: 筛选后的代码列表
+	SelectStocksAtDate(allCodes []string, endIndex int) []string
 
 	// GetName 获取选股器名称
 	GetName() string
 }
 
 // ===== 交易信号生成器接口 =====
-// SignalGenerator 负责对单只股票的历史数据，逐日判断买入/卖出信号
+// SignalGenerator 负责对单只票票的历史数据，逐日判断买入/卖出信号
 type SignalGenerator interface {
-	// Reset 初始化策略状态(每只股票开始回测前调用)
-	// 用于清空历史数据，确保不同股票之间的状态隔离
+	// Reset 初始化策略状态(每只票票开始回测前调用)
+	// 用于清空历史数据，确保不同票票之间的状态隔离
 	Reset()
 
 	// ProcessDay 处理单日数据,返回交易信号
@@ -52,11 +60,12 @@ type Strategy interface {
 // ===== 持仓状态 =====
 // Position 表示当前的持仓状态
 type Position struct {
-	StockCode string  // 股票代码
-	StockName string  // 股票名称
-	StockNum  int     // 持有股数
-	BuyPrice  float32 // 买入价格
-	BuyDate   string  // 买入日期
-	BuyIndex  int     // 买入时的数据索引
-	HoldDays  int     // 持有天数
+	StockCode    string  // 票票代码
+	StockName    string  // 票票名称
+	StockNum     int     // 持有股数
+	BuyPrice     float32 // 买入价格
+	BuyDate      string  // 买入日期
+	BuyIndex     int     // 买入时的数据索引
+	HoldDays     int     // 持有天数
+	HighestPrice float32 // 买入后出现的最高价格(用于回撤止损)
 }

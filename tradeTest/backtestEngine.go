@@ -10,15 +10,27 @@ import (
 
 // BacktestEngine 回测引擎
 type BacktestEngine struct {
-	initialCash float64
-	strategy    stockStrategy.Strategy
+	initialCash      float64
+	strategy         stockStrategy.Strategy
+	reselectInterval int // 重新选股的天数间隔，0表示只在开始时选股一次
 }
 
-// NewBacktestEngine 创建回测引擎
+// NewBacktestEngine 创建回测引擎（默认每30天重新选股）
 func NewBacktestEngine(initialCash float64, strategy stockStrategy.Strategy) *BacktestEngine {
 	return &BacktestEngine{
-		initialCash: initialCash,
-		strategy:    strategy,
+		initialCash:      initialCash,
+		strategy:         strategy,
+		reselectInterval: 30, // 默认每30天重新选股
+	}
+}
+
+// NewBacktestEngineWithReselect 创建回测引擎（自定义选股间隔）
+// reselectInterval: 重新选股的天数间隔，0表示只在开始时选股一次
+func NewBacktestEngineWithReselect(initialCash float64, strategy stockStrategy.Strategy, reselectInterval int) *BacktestEngine {
+	return &BacktestEngine{
+		initialCash:      initialCash,
+		strategy:         strategy,
+		reselectInterval: reselectInterval,
 	}
 }
 
@@ -29,22 +41,27 @@ type BacktestResult struct {
 	Stats          PortfolioStats
 }
 
-// Run 执行回测
+// Run 执行回测（使用固定时间点选股避免未来数据泄漏）
 func (engine *BacktestEngine) Run() BacktestResult {
 	fmt.Printf("========================================\n")
 	fmt.Printf("开始回测: %s\n", engine.strategy.GetName())
 	fmt.Printf("初始资金: %.2f\n", engine.initialCash)
 	fmt.Printf("========================================\n")
 
-	// 第一步: 选股
+	// 获取全市场票票代码
 	allCodes := getAllStockCodes()
-	fmt.Printf("全市场股票数量: %d\n", len(allCodes))
+	fmt.Printf("全市场票票数量: %d\n", len(allCodes))
 
-	selectedCodes := engine.strategy.GetSelector().SelectStocks(allCodes)
-	fmt.Printf("策略[%s]选股结果: %d只股票\n",
+	// 使用固定时间点进行选股（避免未来数据泄漏）
+	// 找出合适的选股时间点：取所有票票数据的中位数长度的一半作为选股时点
+	selectDateIndex := engine.getSelectDateIndex(allCodes)
+	fmt.Printf("选股时间点索引: %d\n", selectDateIndex)
+
+	selectedCodes := engine.strategy.GetSelector().SelectStocksAtDate(allCodes, selectDateIndex)
+	fmt.Printf("策略[%s]选股结果: %d只票票\n",
 		engine.strategy.GetName(), len(selectedCodes))
 
-	// 第二步: 对每只股票进行回测
+	// 对每只票票进行回测
 	wallet := globalDefine.Wallet{
 		Cash:      float32(engine.initialCash),
 		Positions: make([]globalDefine.Position, 0),
@@ -60,10 +77,10 @@ func (engine *BacktestEngine) Run() BacktestResult {
 		}
 	}
 
-	fmt.Printf("实际回测股票数量: %d\n", processedCount)
+	fmt.Printf("实际回测票票数量: %d\n", processedCount)
 	fmt.Printf("========================================\n")
 
-	// 第三步: 计算绩效
+	// 计算绩效
 	stats := CalculatePortfolioPerformance(wallet, allRecords)
 
 	return BacktestResult{
@@ -73,7 +90,26 @@ func (engine *BacktestEngine) Run() BacktestResult {
 	}
 }
 
-// backtestSingleStock 单只股票回测
+// getSelectDateIndex 获取选股时间点索引
+// 使用策略：找出所有票票数据长度，取满足选股器回看要求的最早时间点
+func (engine *BacktestEngine) getSelectDateIndex(allCodes []string) int {
+	// 假设选股器需要500天数据（这是HighPointSelector的默认lookback）
+	// 更好的做法是在接口中添加 GetMinDataLength() 方法
+	minRequiredDays := 500
+
+	// 找出第一只有足够数据的票票，使用其第500天作为选股时间点
+	for _, code := range allCodes {
+		stockInfo := stockData.GetStockRawBycode(code)
+		if stockInfo != nil && len(stockInfo.Datas.DayDatas) >= minRequiredDays {
+			return minRequiredDays - 1 // 返回索引（从0开始）
+		}
+	}
+
+	// 如果没有票票有足够数据，返回0
+	return 0
+}
+
+// backtestSingleStock 单只票票回测
 func (engine *BacktestEngine) backtestSingleStock(
 	code string,
 	wallet *globalDefine.Wallet,
@@ -100,23 +136,25 @@ func (engine *BacktestEngine) backtestSingleStock(
 		// 4. 获取交易信号
 		signal := signalGen.ProcessDay(dayData, i, position)
 
-		// 5. 执行交易
-		if signal == 1 && position == nil { // 买入信号且当前空仓
-			position = engine.executeBuy(code, stockInfo.Name, dayData, i, wallet)
+		// 5. 执行交易（次日开盘价执行，避免未来函数）
+		if signal == 1 && position == nil && i+1 < len(dayDatas) { // 买入信号且当前空仓且有次日数据
+			nextDayData := dayDatas[i+1] // 使用次日数据
+			position = engine.executeBuy(code, stockInfo.Name, nextDayData, i+1, wallet)
 			if position != nil {
 				// 创建新的交易记录
 				record := globalDefine.OperateRecord{
 					StockCode:  code,
 					StockName:  stockInfo.Name,
 					StockNum:   position.StockNum,
-					BuyOperate: createBuyOperate(position, dayData),
+					BuyOperate: createBuyOperate(position, nextDayData),
 					Status:     1, // 已买入
 				}
 				records = append(records, record)
 			}
-		} else if signal == -1 && position != nil { // 卖出信号且当前持仓
+		} else if signal == -1 && position != nil && i+1 < len(dayDatas) { // 卖出信号且当前持仓且有次日数据
+			nextDayData := dayDatas[i+1] // 使用次日数据
 			record := &records[len(records)-1]
-			engine.executeSell(position, dayData, wallet, record)
+			engine.executeSell(position, nextDayData, wallet, record)
 			position = nil // 清空持仓
 		}
 
@@ -136,14 +174,14 @@ func (engine *BacktestEngine) backtestSingleStock(
 	return records
 }
 
-// executeBuy 执行买入
+// executeBuy 执行买入（使用开盘价，模拟真实交易）
 func (engine *BacktestEngine) executeBuy(
 	code, name string,
 	dayData *stockData.StockDataDay,
 	dateIndex int,
 	wallet *globalDefine.Wallet,
 ) *stockStrategy.Position {
-	price := float64(dayData.PriceA)
+	price := float64(dayData.PriceBegin) // 使用开盘价而非收盘价
 
 	// 计算可买股数(假设每次使用10%的现金)
 	cashToUse := float64(wallet.Cash) * 0.1
@@ -157,24 +195,25 @@ func (engine *BacktestEngine) executeBuy(
 	wallet.Cash -= float32(actualCost)
 
 	return &stockStrategy.Position{
-		StockCode: code,
-		StockName: name,
-		StockNum:  stockNum,
-		BuyPrice:  float32(price),
-		BuyDate:   dayData.DataStr,
-		BuyIndex:  dateIndex,
-		HoldDays:  0,
+		StockCode:    code,
+		StockName:    name,
+		StockNum:     stockNum,
+		BuyPrice:     float32(price),
+		BuyDate:      dayData.DataStr,
+		BuyIndex:     dateIndex,
+		HoldDays:     0,
+		HighestPrice: float32(price), // 初始化为买入价
 	}
 }
 
-// executeSell 执行卖出
+// executeSell 执行卖出（使用开盘价，模拟真实交易）
 func (engine *BacktestEngine) executeSell(
 	position *stockStrategy.Position,
 	dayData *stockData.StockDataDay,
 	wallet *globalDefine.Wallet,
 	record *globalDefine.OperateRecord,
 ) {
-	sellPrice := float64(dayData.PriceA)
+	sellPrice := float64(dayData.PriceBegin) // 使用开盘价而非收盘价
 	sellAmount := sellPrice * float64(position.StockNum)
 
 	wallet.Cash += float32(sellAmount)
@@ -204,7 +243,7 @@ func createBuyOperate(position *stockStrategy.Position, dayData *stockData.Stock
 	}
 }
 
-// getAllStockCodes 获取所有股票代码
+// getAllStockCodes 获取所有票票代码
 func getAllStockCodes() []string {
 	codes := make([]string, 0, len(stockData.StockList))
 	for code := range stockData.StockList {

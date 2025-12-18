@@ -8,7 +8,7 @@ import (
 )
 
 // BuyHighSellLowStrategy 追涨杀跌策略
-// 选股：选择近期出现高点的股票
+// 选股：选择近期出现高点的票票
 // 交易：价格创新高买入，止损或超时卖出
 type BuyHighSellLowStrategy struct {
 	selector  stockStrategy.StockSelector
