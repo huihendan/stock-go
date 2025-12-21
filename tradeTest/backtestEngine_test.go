@@ -5,13 +5,22 @@ import (
 	"stock-go/stockData"
 	"stock-go/stockStrategy/strategies"
 	"testing"
+	"time"
 )
 
 // TestBacktestEngineWithStrategy1 测试新回测引擎和策略1
 func TestBacktestEngineWithStrategy1(t *testing.T) {
+	// 输出时间戳，验证测试是否真的在运行
+	// 同时让测试输出包含时间，使 Go 测试框架认为测试是"不确定的"，从而禁用缓存
+	fmt.Printf("\n[测试开始时间: %s]\n", time.Now().Format("15:04:05.000"))
+
 	// 1. 加载票票列表
 	stockData.LoadPreStockList()
 	fmt.Printf("票票列表加载完成，共 %d 只票票\n", len(stockData.StockList))
+
+	// 明确告诉用户：由于使用随机数据，每次运行结果会不同
+	// 如果需要可重复的结果，请使用 -count=1 标志
+	t.Logf("注意：本测试使用随机选择的票票数据，每次运行结果会不同")
 
 	// 2. 创建策略1
 	strategy := strategies.NewBuyHighSellLowStrategy()

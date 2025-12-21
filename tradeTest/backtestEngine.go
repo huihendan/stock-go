@@ -136,25 +136,23 @@ func (engine *BacktestEngine) backtestSingleStock(
 		// 4. 获取交易信号
 		signal := signalGen.ProcessDay(dayData, i, position)
 
-		// 5. 执行交易（次日开盘价执行，避免未来函数）
-		if signal == 1 && position == nil && i+1 < len(dayDatas) { // 买入信号且当前空仓且有次日数据
-			nextDayData := dayDatas[i+1] // 使用次日数据
-			position = engine.executeBuy(code, stockInfo.Name, nextDayData, i+1, wallet)
+		// 5. 执行交易（当天开盘价执行）
+		if signal == 1 && position == nil { // 买入信号且当前空仓
+			position = engine.executeBuy(code, stockInfo.Name, dayData, i, wallet)
 			if position != nil {
 				// 创建新的交易记录
 				record := globalDefine.OperateRecord{
 					StockCode:  code,
 					StockName:  stockInfo.Name,
 					StockNum:   position.StockNum,
-					BuyOperate: createBuyOperate(position, nextDayData),
+					BuyOperate: createBuyOperate(position, dayData),
 					Status:     1, // 已买入
 				}
 				records = append(records, record)
 			}
-		} else if signal == -1 && position != nil && i+1 < len(dayDatas) { // 卖出信号且当前持仓且有次日数据
-			nextDayData := dayDatas[i+1] // 使用次日数据
+		} else if signal == -1 && position != nil { // 卖出信号且当前持仓
 			record := &records[len(records)-1]
-			engine.executeSell(position, nextDayData, wallet, record)
+			engine.executeSell(position, dayData, wallet, record)
 			position = nil // 清空持仓
 		}
 

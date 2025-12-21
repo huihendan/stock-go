@@ -3,6 +3,7 @@ package stockData
 import (
 	"encoding/csv"
 	"log/slog"
+	"math/rand/v2"
 	"os"
 	globalDefine "stock-go/globalDefine"
 	"stock-go/logger"
@@ -54,8 +55,12 @@ func LoadAllStockList() [][]string {
 	return content
 }
 
-// 加载stock列表
+// 加载票票列表，随机选择 1/STOCK_DATA_LOAD_PCT 的数据
 func LoadPreStockList() map[string]string {
+	// 清空现有数据，确保每次都是重新随机选择
+	StockList = make(map[string]string)
+	StocksRaw = make(map[string]*StockInfo)
+
 	fileName := globalDefine.DATA_PATH + "stockList.csv"
 	fs1, _ := os.Open(fileName)
 	r1 := csv.NewReader(fs1)
@@ -64,12 +69,13 @@ func LoadPreStockList() map[string]string {
 		logger.Error("can not readall", "err", err)
 	}
 
-	for index, row := range content {
-		//调试阶段，只取30分之一 个数据
-		if index%globalDefine.STOCK_DATA_LOAD_PCT == globalDefine.STOCK_DATA_LOAD_MOD {
-			//continue
-			//}
-			//if index != 0 {
+	// 使用 math/rand/v2 的全局随机数生成器，自动使用随机种子
+	// 生成一个随机标识来验证每次调用确实是新的
+	randomMarker := rand.IntN(1000000)
+
+	for _, row := range content {
+		// 随机选择 1/STOCK_DATA_LOAD_PCT 的数据
+		if rand.IntN(globalDefine.STOCK_DATA_LOAD_PCT) == 0 {
 			row0 := string(row[0])
 			row1 := string(row[1])
 			row2 := string(row[2])
@@ -81,10 +87,9 @@ func LoadPreStockList() map[string]string {
 			}
 			StockList[code] = row2
 		}
-
 	}
 
-	slog.Info("stock list size", "size", len(content))
+	slog.Info("stock list loaded", "size", len(StockList), "random_marker", randomMarker)
 	return StockList
 }
 
@@ -124,6 +129,8 @@ func LoadFromCsv(code string) (stockData StockData) {
 			stock.PriceHigh = float32(priceHigh * Interest)
 			stock.PriceLow = float32(priceLow * Interest)
 			stock.PriceA = (stock.PriceBegin + stock.PriceEnd) / 2
+			stock.PriceBegin = stock.PriceEnd
+			stock.PriceA = stock.PriceEnd
 			stockData.DayDatas = append(stockData.DayDatas, stock)
 			priceEndY = float64(priceEnd)
 		}

@@ -39,23 +39,26 @@ func (sg *BuyHighSellLowSignal) ProcessDay(
 	dateIndex int,
 	position *stockStrategy.Position,
 ) int {
-	currentPrice := dayData.PriceA
+	currentPrice := dayData.PriceBegin
 
-	// 1. 更新历史价格队列
-	sg.historyPrices = append(sg.historyPrices, currentPrice)
-
-	// 2. 数据不足，无操作
+	// 1. 数据不足，先累积数据
 	if len(sg.historyPrices) < sg.LookbackDays {
+		sg.historyPrices = append(sg.historyPrices, currentPrice)
 		return 0
 	}
 
-	// 3. 判断买入信号(空仓时)
+	// 2. 判断买入信号(空仓时)
 	if position == nil {
 		if sg.isBuySignal(currentPrice) {
+			sg.historyPrices = append(sg.historyPrices, currentPrice)
 			return 1 // 买入
 		}
+		sg.historyPrices = append(sg.historyPrices, currentPrice)
 		return 0
 	}
+
+	// 3. 更新历史价格队列
+	sg.historyPrices = append(sg.historyPrices, currentPrice)
 
 	// 4. 更新持仓的最高价
 	if currentPrice > position.HighestPrice {
@@ -70,8 +73,8 @@ func (sg *BuyHighSellLowSignal) ProcessDay(
 	return 0
 }
 
-// isBuySignal 买入信号：前一天达到历史最高价（避免未来函数）
-// 逻辑：判断前一天是否创新高，如果是则次日开盘买入
+// isBuySignal 买入信号：当天价格达到过去N天的最高价
+// 逻辑：判断当天价格是否达到或超过过去N天（不包括今天）的最高价
 func (sg *BuyHighSellLowSignal) isBuySignal(currentPrice float32) bool {
 	historyLen := len(sg.historyPrices)
 
@@ -80,26 +83,20 @@ func (sg *BuyHighSellLowSignal) isBuySignal(currentPrice float32) bool {
 		return false
 	}
 
-	// 计算回看窗口的起始位置
+	// 计算回看窗口的起始位置（从过去N天开始）
 	startIndex := historyLen - sg.LookbackDays
 
-	// 找出回看窗口内的最高价（不包括昨天，即historyLen-1）
+	// 找出回看窗口内的最高价（不包括今天）
 	var highestPrice float32 = 0
-	for i := startIndex; i < historyLen-1; i++ {
+	for i := startIndex; i < historyLen; i++ {
 		if sg.historyPrices[i] > highestPrice {
 			highestPrice = sg.historyPrices[i]
 		}
 	}
 
-	// 判断昨天（historyLen-1）的价格是否达到或超过之前的最高价
-	// 注意：此时 sg.historyPrices 还未包含今天的价格
-	if historyLen > 0 {
-		yesterdayPrice := sg.historyPrices[historyLen-1]
-		// 昨天创新高（允许0.5%误差），则今天开盘买入
-		return yesterdayPrice >= highestPrice*0.995
-	}
-
-	return false
+	// 判断今天的价格是否达到或超过过去的最高价
+	// 允许0.5%误差，当天创新高则买入
+	return currentPrice >= highestPrice*0.995
 }
 
 // isSellSignal 卖出信号：止损或超过最大持有天数
