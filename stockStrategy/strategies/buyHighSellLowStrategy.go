@@ -19,7 +19,7 @@ type BuyHighSellLowStrategy struct {
 func NewBuyHighSellLowStrategy() *BuyHighSellLowStrategy {
 	return &BuyHighSellLowStrategy{
 		selector:  selectors.NewHighPointSelector(500, 15),
-		signalGen: signals.NewBuyHighSellLowSignal(300, 0.06, 15),
+		signalGen: signals.NewBuyHighSellLowSignal(300, 0.06, 30),
 	}
 }
 

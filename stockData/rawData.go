@@ -10,8 +10,8 @@ import (
 var StocksRaw = make(map[string]*StockInfo)
 
 func LoadRawDataOneByCode(code string) (stock *StockInfo) {
-	start1 := time.Now()
-	defer utils.CostTime(start1)
+	//start1 := time.Now()
+	//defer utils.CostTime(start1)
 	stock = &StockInfo{
 		Code:  code,
 		Datas: LoadFromCsv(code),

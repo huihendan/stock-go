@@ -8,8 +8,8 @@ const (
 )
 
 const (
-	STOCK_DATA_LOAD_PCT = 5
-	STOCK_DATA_LOAD_MOD = 6
+	STOCK_DATA_LOAD_PCT = 4
+	STOCK_DATA_LOAD_MOD = 1
 )
 
 var DATA_PATH = "../Data/"

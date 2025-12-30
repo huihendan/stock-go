@@ -25,8 +25,8 @@ func TestTimeBasedBacktestEngine(t *testing.T) {
 
 	// 3. 创建基于时间流逝的回测引擎
 	initialCash := 1000000.0 // 100万初始资金
-	maxPositions := 2        // 最多同时持有2只票票
-	cashPerPosition := 0.5   // 每个持仓使用50%的现金
+	maxPositions := 4        // 最多同时持有4只票票
+	cashPerPosition := 1.0   // 全仓买入（该参数在新逻辑中不再使用）
 
 	engine := NewTimeBasedBacktestEngine(
 		initialCash,
@@ -50,14 +50,14 @@ func TestTimeBasedBacktestEngine(t *testing.T) {
 	for _, record := range result.TradeRecords {
 		if record.Action == "buy" {
 			buyCount++
-			if buyCount <= 5 { // 只显示前5笔买入
+			if buyCount <= 2 { // 只显示前5笔买入
 				fmt.Printf("[买入] %s(%s) 日期:%s 价格:%.2f 数量:%d 金额:%.2f 剩余现金:%.2f\n",
 					record.Name, record.Code, record.Date, record.Price,
 					record.StockNum, record.Amount, record.Cash)
 			}
 		} else {
 			sellCount++
-			if sellCount <= 5 { // 只显示前5笔卖出
+			if sellCount <= 2 { // 只显示前5笔卖出
 				fmt.Printf("[卖出] %s(%s) 日期:%s 价格:%.2f 数量:%d 金额:%.2f 剩余现金:%.2f 原因:%s\n",
 					record.Name, record.Code, record.Date, record.Price,
 					record.StockNum, record.Amount, record.Cash, record.Reason)
@@ -65,11 +65,11 @@ func TestTimeBasedBacktestEngine(t *testing.T) {
 		}
 	}
 
-	if buyCount > 5 {
-		fmt.Printf("... (还有 %d 笔买入)\n", buyCount-5)
+	if buyCount > 2 {
+		fmt.Printf("... (还有 %d 笔买入)\n", buyCount-2)
 	}
-	if sellCount > 5 {
-		fmt.Printf("... (还有 %d 笔卖出)\n", sellCount-5)
+	if sellCount > 2 {
+		fmt.Printf("... (还有 %d 笔卖出)\n", sellCount-2)
 	}
 
 	fmt.Printf("\n========== 资金曲线（采样） ==========\n")

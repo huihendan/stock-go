@@ -12,7 +12,7 @@ import (
 type BuyHighSellLowSignal struct {
 	LookbackDays    int     // 回看天数，默认300
 	SellDropPercent float64 // 止损百分比，默认0.06（6%）
-	MaxHoldDays     int     // 最大持有天数，默认15
+	MaxHoldDays     int     // 最大持有天数，默认30
 
 	// 内部状态(防止未来函数)
 	historyPrices []float32 // 历史价格队列
